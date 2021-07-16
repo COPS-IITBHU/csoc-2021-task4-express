@@ -31,7 +31,7 @@ var issueBook = catchAsync(async (req, res) => {
   const bookCopy = book.available_copies.find(copy => {
     return copy.status;
   });
-  if (!copy) {
+  if (!bookCopy) {
     req.flash("error", "No copy available");
     res.redirect("/books");
   }
