@@ -15,10 +15,9 @@ var userSchema=new mongoose.Schema({
     },
 
     loaned_books://TODO: embed reference to id's of book copies loaned by this particular user in this array
-    {
-        type: [ObjectId],
-        default: [],
-    }
+    [
+        {type: mongoose.Schema.Types.ObjectId}
+    ]
 })
 userSchema.plugin(passportLocal);
 module.exports=mongoose.model("User",userSchema);
