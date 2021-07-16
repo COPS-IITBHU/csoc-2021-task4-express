@@ -7,7 +7,7 @@
         <%- include ("./partials/sidebar.ejs") %>
         <div class="col-sm-10">
           <h2>Title: <%= book.title %></h2>
-
+          <% num_available = book.available_copies.filter(copy=>copy.status).length %>
           <dl>
             <dt>Genre:</dt>
             <dd><%= book.genre %></dd>
@@ -22,14 +22,17 @@
             <dt>Available Copies:</dt>
             <dd><%= num_available %></dd>
           </dl>
+          <% if (num_available) {%>
           <form action="/books/issue" method="POST">
             <input type="text" hidden value="<%= book.id %>" name="bid" />
             <button class="btn btn-primary" id="loan-button" type="submit">
               Loan <%= book.title %>
             </button>
+            <% } %>
           </form>
         </div>
       </div>
     </div>
+    <%- include("./partials/flash.ejs") %>
   </body>
 </html>

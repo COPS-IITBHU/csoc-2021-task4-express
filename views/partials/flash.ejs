@@ -1,0 +1,15 @@
+<% if(success && success.length) {%>
+<script>
+  iziToast.success({
+    title: "Success",
+    message: "<%= success %>"
+  });
+</script>
+<% } %> <% if(error && error.length) {%>
+<script>
+  iziToast.error({
+    title: "Error",
+    message: "<%=error%>"
+  });
+</script>
+<% } %>

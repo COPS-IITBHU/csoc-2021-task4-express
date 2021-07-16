@@ -1,14 +1,15 @@
-var mongoose=require("mongoose");
-var	passportLocal=require("passport-local-mongoose");
+var mongoose = require("mongoose");
+var passportLocal = require("passport-local-mongoose");
+const BookCopy = require("./bookCopy");
+const Schema = mongoose.Schema;
 //DEFINING THE USER MODEL
-var userSchema=new mongoose.Schema({
-
-	//TODO: DEFINE USERNAME AND PASSSWORD ATTRIBUTES
-
-
-    loaned_books:[
-        //TODO: embed reference to id's of book copies loaned by this particular user in this array
-    ]
-})
+var userSchema = new Schema({
+  loaned_books: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Bookcopy"
+    }
+  ]
+});
 userSchema.plugin(passportLocal);
-module.exports=mongoose.model("User",userSchema);
+module.exports = mongoose.model("User", userSchema);
