@@ -1,6 +1,12 @@
+const Book = require('../models/book');
+
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
-    res.render("book_list", { books: [], title: "Books | Library" });
+    Book.find((err,books)=>{
+        if(err) throw err;
+        res.render("book_list", { books:books, title: "Books | Library" });
+    })
+    
 }
 
 var getBook = (req, res) => {
