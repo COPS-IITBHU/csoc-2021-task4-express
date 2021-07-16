@@ -27,7 +27,7 @@ var bookSchema=new mongoose.Schema({
         max: 5,
     },
     mrp: {
-        type: Decimal128,
+        type: mongoose.Schema.Types.Decimal128,
         required: true,
         min: 0
     },
