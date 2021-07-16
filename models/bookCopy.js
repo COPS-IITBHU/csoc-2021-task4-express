@@ -13,10 +13,16 @@ var bookCopySchema=new mongoose.Schema({
  },
  //TRUE IF AVAILABLE TO BE ISSUED, ELSE FALSE 
  borrow_data: {
-     type: Date
+     type: Date,
+     required: function() {
+         return !this.status;
+     }
  }, //date when book was borrowed
  borrower:{
      type: ObjectId,
+     required: function() {
+         return !this.status;
+     }
  } //embed reference to id of user who has borrowed it 
 })
 module.exports=mongoose.model("Bookcopy",bookCopySchema);
