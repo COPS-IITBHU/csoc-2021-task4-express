@@ -7,6 +7,7 @@ const BookCopy = require("../models/bookCopy");
 const mongoose = require("mongoose");
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/library";
+console.log(dbUrl);
 mongoose.connect(dbUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,

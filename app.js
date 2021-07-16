@@ -11,16 +11,43 @@ var User = require("./models/user");
 var localStrategy = require("passport-local");
 var session = require("express-session");
 var flash = require("connect-flash");
+var MongoDBStore = require("connect-mongodb-session")(session);
+var ServerError = require("./utilities/ServerError");
 //importing the middleware object to use its functions
 var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
 var port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
 
-/*  CONFIGURE WITH PASSPORT */
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/library";
+// const dbUrl = "mongodb://localhost:27017/library";
+mongoose.connect(dbUrl, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Database connected");
+});
+
 const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+const sessionStore = new MongoDBStore({
+  url: dbUrl,
+  secret,
+  touchAfter: 24 * 60 * 60
+});
+
+sessionStore.on("error", function (e) {
+  console.log("SESSION STORE ERROR", e);
+});
+
 const sessionConfig = {
-  name: "session",
+  store: sessionStore,
+  name: "library-session",
   secret,
   resave: false,
   saveUninitialized: true,
@@ -34,6 +61,8 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
+
+/*  CONFIGURE WITH PASSPORT */
 app.use(passport.initialize()); //middleware that initialises Passport.
 app.use(passport.session());
 passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
@@ -48,20 +77,6 @@ app.use(function (req, res, next) {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
-});
-
-const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/library";
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false
-});
-
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Database connected");
 });
 
 app.get("/", (req, res) => {
@@ -81,9 +96,14 @@ app.get("/register", auth.getRegister);
 app.post("/register", auth.postRegister);
 app.get("/logout", auth.logout);
 
-app.use("*", (req, res) => {
-  req.flash("error", "Page not Found");
-  res.render("index", { title: "Library" });
+app.all("*", (req, res, next) => {
+  next(new ServerError("Page Not Found", 404));
+});
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "An Error Occurred. Please try again!";
+  res.status(statusCode).render("error", { err, title: "Error" });
 });
 
 app.listen(port, () => {
