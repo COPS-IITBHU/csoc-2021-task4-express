@@ -11,7 +11,7 @@ var User = require("./models/user");
 var localStrategy = require("passport-local");
 var session = require("express-session");
 var flash = require("connect-flash");
-var MongoDBStore = require("connect-mongodb-session")(session);
+const MongoStore = new require("connect-mongo");
 var ServerError = require("./utilities/ServerError");
 //importing the middleware object to use its functions
 var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
@@ -35,28 +35,24 @@ db.once("open", () => {
 });
 
 const secret = process.env.SECRET || "thisshouldbeabettersecret!";
-const sessionStore = new MongoDBStore({
-  url: dbUrl,
-  secret,
-  touchAfter: 24 * 60 * 60
-});
-
-sessionStore.on("error", function (e) {
-  console.log("SESSION STORE ERROR", e);
-});
-
 const sessionConfig = {
-  store: sessionStore,
   name: "library-session",
   secret,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     // secure: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7
-  }
+  },
+  store: MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+      secret
+    }
+  })
 };
 
 app.use(session(sessionConfig));
