@@ -17,7 +17,7 @@ app.use(
   require("express-session")({
     secret: "decryptionkey", //This is the secret used to sign the session ID cookie.
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
   })
 );
 
@@ -37,6 +37,14 @@ app.use(function (req, res, next) {
 });
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
+mongoose.connect('mongodb+srv://tiger:firstapp@cluster0.tlwt0.mongodb.net/Library?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("MONGO CONNECTION OPEN!!!")
+  })
+  .catch(err => {
+    console.log("OH NO MONGO CONNECTION ERROR!!!!")
+    console.log(err)
+  })
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
@@ -53,14 +61,17 @@ app.get("/books", store.getAllBooks);
 app.get("/book/:id", store.getBook);
 
 app.get("/books/loaned",
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
- store.getLoanedBooks);
+  //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+  middleware.isLoggedIn,
+  store.getLoanedBooks);
 
-app.post("/books/issue", 
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
-store.issueBook);
+app.post("/books/issue",
+  //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+  middleware.isLoggedIn,
+  store.issueBook);
 
 app.post("/books/search-book", store.searchBooks);
+app.post("/books/return", store.returnBook);
 
 /* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
 
