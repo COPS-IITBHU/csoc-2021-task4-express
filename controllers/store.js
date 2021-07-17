@@ -43,18 +43,17 @@ var issueBook = async (req, res) => {
     // return with appropriate status
     // Optionally redirect to page or display on same
     const { user, body } = req;
-    console.log(user);
     const books = await Bookcopy.find({ book: body.bid });
     let id;
     for (let bookcopy of books) {
         if (bookcopy.status === true) {
-            id = bookcopy.id;
+            id = bookcopy._id;
             await Book.findByIdAndUpdate(body.bid, { $inc: { available_copies: -1 } });
             await Bookcopy.findByIdAndUpdate(id, { status: false, borrow_date: Date.now(), borrower: user.id });
             break
         }
     }
-    console.log((await Bookcopy.findById(id)).populated('book'))
+    
     await User.findByIdAndUpdate(user.id, { $push: { loaned_books: id } })
     res.redirect("/")
 }

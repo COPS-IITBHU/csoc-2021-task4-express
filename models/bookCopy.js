@@ -11,8 +11,8 @@ var bookCopySchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },//TRUE IF AVAILABLE TO BE ISSUED, ELSE FALSE 
-  borrow_data: {
-    type: String,
+  borrow_date: {
+    type: Date,
   }, //date when book was borrowed
   borrower: {
     type: mongoose.Schema.Types.ObjectId,
