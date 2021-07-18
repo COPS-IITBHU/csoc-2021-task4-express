@@ -1,14 +1,24 @@
 var mongoose=require("mongoose");
 var	passportLocal=require("passport-local-mongoose");
-//DEFINING THE USER MODEL
+
+/* Here, salt and hash will constitute the password together */
+
 var userSchema=new mongoose.Schema({
-
-	//TODO: DEFINE USERNAME AND PASSSWORD ATTRIBUTES
-
-
-    loaned_books:[
-        //TODO: embed reference to id's of book copies loaned by this particular user in this array
-    ]
+    username : {
+        type : String,
+        required : true,
+    },
+    salt : {
+        type : String,
+    }, 
+    hash : {
+        type : String,
+    },
+    loaned_books:[{
+       type : mongoose.Schema.Types.ObjectId,
+       ref : 'Bookcopy'    
+    }]
 })
+
 userSchema.plugin(passportLocal);
 module.exports=mongoose.model("User",userSchema);

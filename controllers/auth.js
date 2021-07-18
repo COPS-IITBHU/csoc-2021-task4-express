@@ -1,23 +1,51 @@
-var getLogin = (req, res) => {
-  //TODO: render login page
+const User = require('../models/user');
+const passport = require('passport');
+
+const getLogin = (req, res) => {
+  res.render("login", {title : "Login", message : ""});
 };
 
-var postLogin = (req, res) => {
-  // TODO: authenticate using passport
-  //On successful authentication, redirect to next page
+const postLogin = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return res.render("login", {title : "Login", message : "Some Error Occured, Try Again"});
+    }
+
+    if (!user) {
+      return res.render("login", {title : "Login", message : "Invalid Credentials"});
+    }
+
+    req.login(user, (error) => {
+      if (error) {
+        return res.render("login", {title : "Login", message : "Some Error Occured, Try Again"});
+      }
+      return res.redirect("/");
+    })
+  })(req,res, next);
 };
 
-var logout = (req, res) => {
-  // TODO: write code to logout user and redirect back to the page
+const logout = (req, res) => {
+  req.logout();
+  res.redirect('/');
 };
 
-var getRegister = (req, res) => {
-  // TODO: render register page
+const getRegister = (req, res) => {
+  res.render("register", {title : "Register", message : ""});
 };
 
-var postRegister = (req, res) => {
-  // TODO: Register user to User db using passport
-  //On successful authentication, redirect to next page
+const postRegister = (req, res) => {
+  const {username, password} = req.body;
+  const user = new User();
+  user.username = username;
+  
+  User.register(user, password, (error, user) => {
+    if (error) {
+     return res.render('register', {title : 'Register', message : "User with same username or password already exists"});
+    }
+    passport.authenticate("local")(req,res, () => {
+      res.redirect('/');
+    })
+  })
 };
 
 module.exports = {

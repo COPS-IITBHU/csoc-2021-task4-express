@@ -31,5 +31,12 @@
         </div>
       </div>
     </div>
+    <script>
+        let failure = "<%= message %>"
+        if (failure === 'true') {
+            alert("No copy of <%= book.title %> is available");
+            window.location.replace("/book/<%= book.id %>");
+        }
+    </script>
   </body>
 </html>

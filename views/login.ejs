@@ -1,0 +1,29 @@
+<html>
+    <%- include ("./partials/header.ejs") %>
+    <%- include ("./partials/sidebar.ejs") %>
+
+    <body>
+        <div class="container-fluid">
+            <div class="row d-flex flex-column w-100 justify-content-center align-items-center">
+                <h5>Login</h5>
+                <% if (message) { %>
+                    <p class="text-center text-danger" style="font-size:1.3rem"><%= message %></p>
+                <% } %>
+                <form method="POST" action="/login">
+                    <div class="mb-3">
+                        <label for="username1" class="form-label">Username</label>
+                        <input required type="text" class="form-control" id="username1" aria-describedby="usernameHelp" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPassword1" class="form-label">Password</label>
+                        <input required type="password" class="form-control" id="inputPassword1" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit</button>
+                    OR
+                    <a class="btn btn-primary" href="/register" role="button">Register</a>
+                </form>
+            </div>
+        </div>
+    </body>
+
+</html>

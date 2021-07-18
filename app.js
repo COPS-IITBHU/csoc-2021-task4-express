@@ -11,6 +11,7 @@ var middleware = require("./middleware"); //no need of writing index.js as direc
 var port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended : false }));
 
 /*  CONFIGURE WITH PASSPORT */
 app.use(
@@ -23,8 +24,8 @@ app.use(
 
 app.use(passport.initialize()); //middleware that initialises Passport.
 app.use(passport.session());
-passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
-passport.serializeUser(User.serializeUser()); //used to serialize the user for the session
+passport.use(new localStrategy(User.authenticate())); // used to authenticate User model with passport
+passport.serializeUser(User.serializeUser()); // used to serialize the user for the session
 passport.deserializeUser(User.deserializeUser()); // used to deserialize the user
 
 app.use(express.urlencoded({ extended: true })); //parses incoming url encoded data from forms to json objects
@@ -36,39 +37,40 @@ app.use(function (req, res, next) {
   next();
 });
 
-/* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
+/* CONNECTING TO MONGODB SERVER  */
+mongoose.connect("mongodb+srv://spunky:spunky12345@cluster0.jhtks.mongodb.net/library-system?retryWrites=true&w=majority", {
+  useNewUrlParser : true,
+  useCreateIndex : true
+});
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
 });
 
-/*-----------------Store ROUTES
-TODO: Your task is to complete below controllers in controllers/store.js
-If you need to add any new route add it here and define its controller
-controllers folder.
-*/
+/* STORE ROUTES */
 
 app.get("/books", store.getAllBooks);
 
 app.get("/book/:id", store.getBook);
 
 app.get("/books/loaned",
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
- store.getLoanedBooks);
+    middleware.isLoggedIn,
+    store.getLoanedBooks
+);
 
 app.post("/books/issue", 
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
-store.issueBook);
+    middleware.isLoggedIn,
+    store.issueBook
+);
 
 app.post("/books/search-book", store.searchBooks);
 
-/* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
+app.post('/books/return',
+    middleware.isLoggedIn,
+    store.returnBook
+);
 
-/*-----------------AUTH ROUTES
-TODO: Your task is to complete below controllers in controllers/auth.js
-If you need to add any new route add it here and define its controller
-controllers folder.
-*/
+/* AUTH ROUTES */
 
 app.get("/login", auth.getLogin);
 
