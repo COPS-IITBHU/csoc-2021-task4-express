@@ -11,6 +11,11 @@ var getAllBooks = (req, res) => {
 
 var getBook = (req, res) => {
     //TODO: access the book with a given id and render book detail page
+   
+    Book.findById(req.params.id,(err,book)=>{
+        if(err) throw err;
+        res.render('book_detail',{book:book,num_available:book.available_copies, title: `Book Details | ${book.title}`});
+    });
 }
 
 var getLoanedBooks = (req, res) => {
@@ -23,6 +28,8 @@ var issueBook = (req, res) => {
     // TODO: Extract necessary book details from request
     // return with appropriate status
     // Optionally redirect to page or display on same
+    console.log(req);
+    res.send('hello');
 }
 
 var searchBooks = (req, res) => {
