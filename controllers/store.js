@@ -15,9 +15,9 @@ var getBook = (req, res) => {
    
     Book.findById(req.params.id,(err,book)=>{
         if(err) throw err;
-        BookCopy.find({book: mongoose.Types.ObjectId(req.params.id),status:true},(er,books)=>{
+        BookCopy.find({book: mongoose.Types.ObjectId(req.params.id),status:true},(er,bookCopies)=>{
             if(er) throw er;
-        res.render('book_detail',{book:book,num_available:books.length, title: `Book Details | ${book.title}`});
+        res.render('book_detail',{book:book,num_available:bookCopies.length, title: `Book Details | ${book.title}`});
         });
     });
 }
@@ -32,8 +32,16 @@ var issueBook = (req, res) => {
     // TODO: Extract necessary book details from request
     // return with appropriate status
     // Optionally redirect to page or display on same
-    console.log(req.body.bid);
-    res.send('hello');
+    BookCopy.find({book: req.body.bid,status:true},(err,bookCopies)=>{
+        if(bookCopies.length==0){
+            res.send('Oh no! no more books')
+        } else {
+            bookCopies[0].status = false;
+            bookCopies[0].save().then((_)=>{
+                res.send('Successfully Issued');
+            });
+        }
+    })
 }
 
 var searchBooks = (req, res) => {
