@@ -37,6 +37,10 @@ app.use(function (req, res, next) {
 });
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
+const URI = require("./config/uri").mongoURI;
+mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+  .then(() => console.log("Connection of app with MongoDB established..."))
+  .catch(err => console.log(err));
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
