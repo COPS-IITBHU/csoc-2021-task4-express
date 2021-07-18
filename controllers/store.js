@@ -14,12 +14,19 @@ var getAllBooks = (req, res) => {
 
 var getBook = (req, res) => {
     const bookId=req.params.id
+   
+
     Book.findById(bookId,function(err,selectedBook) {
         if (err){
             console.log(err);
         }
         else{
-            res.render("book_detail", { book: selectedBook, title: "Books | Library" });
+             BookCopy.countDocuments({status:false,book:bookId}).then((count)=>{
+                const currentCopiesAvailable=selectedBook.available_copies-count;
+                res.render("book_detail", { book: selectedBook, title: selectedBook.title,num_available:currentCopiesAvailable });
+
+            });
+            
         }
     })
     //TODO: access the book with a given id and render book detail page
@@ -28,36 +35,34 @@ var getBook = (req, res) => {
 
 var getLoanedBooks = (req, res) => {
 
+    const userId=req.user.id;
+    BookCopy.find({borowwer:userId},function(err,borrowedBooks){
+        res.render("loaned_books",{books:borrowedBooks,title:"Borrowed books"})
+    })
+
     //TODO: access the books loaned for this user and render loaned books page
 }
 
-var issueBook = (req, res) => {
-    const bookId=req.body.bid
-    const currentCopiesAvailable=req.body.num_available_copies
+var issueBook = async (req, res) => {
+    const {bid,num_available_copies}=req.body
+    const userId=req.user.id
 
     const date=new Date()
     const borrowDate= date.toDateString()
     
     // console.log(req.user.id)
 
-    
+    await BookCopy.count({status:false,book:bid}).then((count)=>{
+        console.log("True status: "+count)
+        console.log("Total copies: "+num_available_copies)
+        const currentCopiesAvailable=num_available_copies-count;
+        if (currentCopiesAvailable>0){
 
-    if (currentCopiesAvailable>0){
+            const bookInstance = new BookCopy({book:bid,status:false,borrow_date:borrowDate,borrower:userId})
+            bookInstance.save();
+            res.redirect("/book/"+bid)
 
-    const bookInstance = new BookCopy({book:bookId,status:false,borrow_date:borrowDate,borrower:req.user.id})
-    bookInstance.save();
-    Book.findByIdAndUpdate(bookId,{available_copies:currentCopiesAvailable-1},function(err,thisBook) {
-        if(err){
-            console.log(err)
-        }
-    })
-    
-    Book.find({},function(err,foundBooks) {
-        if(foundBooks.length>0){
-            res.render("book_list", { books: foundBooks, title: "Books | Library" });
-        }   
-    })}
-
+    }});
     // TODO: Extract necessary book details from request
     // return with appropriate status
     // Optionally redirect to page or display on same
