@@ -1,6 +1,7 @@
 const Book = require('../models/book');
 const BookCopy = require('../models/bookCopy');
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const book = require('../models/book');
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
     Book.find((err,books)=>{
@@ -25,6 +26,21 @@ var getBook = (req, res) => {
 var getLoanedBooks = (req, res) => {
 
     //TODO: access the books loaned for this user and render loaned books page
+    
+    Book.find((err,books)=>{
+        if (err) throw err;
+        BookCopy.find({status:false},(er,bookCopies)=>{
+            if(er) throw er;
+            res.render('loaned_books',{books:bookCopies.map((bookCopy)=>{
+                return {
+                    book: books.find(book=>book.id=bookCopy.book),
+                    status:bookCopy.status,
+                }
+            }),title:`Loaned Books | User`});
+        });
+    })
+
+
 }
 
 var issueBook = (req, res) => {
