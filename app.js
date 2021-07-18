@@ -37,6 +37,12 @@ app.use(function (req, res, next) {
 });
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
+const mongoURI = require('./config/key').mongoURI;
+mongoose.connect(mongoURI,{useNewUrlParser:true,useUnifiedTopology:true});
+
+//Populate with sample data
+// const pop = require('./test');
+// pop.populateBook();
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
