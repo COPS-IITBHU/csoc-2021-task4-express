@@ -35,6 +35,7 @@ var getLoanedBooks = (req, res) => {
                 return {
                     book: books.find(book=>book.id=bookCopy.book),
                     status:bookCopy.status,
+                    id:bookCopy.id
                 }
             }),title:`Loaned Books | User`});
         });
@@ -60,6 +61,19 @@ var issueBook = (req, res) => {
     })
 }
 
+var returnBook = (req, res) => {
+    BookCopy.findById(req.body.bcid,(err,bookCopy)=>{
+        if (bookCopy.status) {
+            res.send('Book was already Returned');
+        } else {
+            bookCopy.status = true;
+            bookCopy.save().then((_)=>{
+                res.send('Book Saved');
+            });
+        }
+    })
+}
+
 var searchBooks = (req, res) => {
     // TODO: extract search details
     // query book model on these details
@@ -71,5 +85,6 @@ module.exports = {
     getBook,
     getLoanedBooks,
     issueBook,
+    returnBook,
     searchBooks
 }
