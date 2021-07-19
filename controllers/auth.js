@@ -17,7 +17,8 @@ var getLogin = (req, res) => {
 
 var logout = (req, res) => {
   // TODO: write code to logout user and redirect back to the page
-
+  req.logout();
+  res.redirect('/');
 };
 
 var getRegister = (req, res) => {
