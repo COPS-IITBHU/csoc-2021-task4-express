@@ -7,12 +7,9 @@ var userSchema=new mongoose.Schema({
     username:{
         type: String,
         required: true,
+        unique: true,
     },
 
-    password: {
-        type: String,
-        required: true,
-    },
 
     loaned_books://TODO: embed reference to id's of book copies loaned by this particular user in this array
     [
