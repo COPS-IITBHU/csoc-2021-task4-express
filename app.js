@@ -9,6 +9,9 @@ var localStrategy = require("passport-local");
 //importing the middleware object to use its functions
 var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
 var port = process.env.PORT || 3000;
+
+
+
 mongoose.set('useFindAndModify', false);
 
 app.use(express.static("public"));
@@ -27,6 +30,8 @@ app.use(passport.session());
 passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
 passport.serializeUser(User.serializeUser()); //used to serialize the user for the session
 passport.deserializeUser(User.deserializeUser()); // used to deserialize the user
+
+
 
 app.use(express.urlencoded({ extended: true })); //parses incoming url encoded data from forms to json objects
 app.set("view engine", "ejs");
@@ -83,7 +88,7 @@ app.get("/login", auth.getLogin);
 
 app.post("/login", auth.postLogin);
 
-app.get("/register", auth.getRegister);
+app.get("/register",auth.getRegister);
 
 app.post("/register", auth.postRegister);
 
