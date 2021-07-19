@@ -1,6 +1,6 @@
 const Book = require("../models/book")
 const BookCopy = require("../models/bookCopy")
-
+const User = require("../models/user")
 
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
@@ -14,8 +14,6 @@ var getAllBooks = (req, res) => {
 
 var getBook = (req, res) => {
     const bookId=req.params.id
-   
-
     Book.findById(bookId,function(err,selectedBook) {
         if (err){
             console.log(err);
@@ -41,8 +39,6 @@ var getLoanedBooks = (req, res) => {
             res.render('loaned_books',{books:borrowedBooks,title:'Borrowed books'})
         })
     })
-    
-
     //TODO: access the books loaned for this user and render loaned books page
 }
 
@@ -51,9 +47,14 @@ var returnBook = async (req, res) => {
     const userId=req.user
     const {bid}= req.body
     await BookCopy.findByIdAndUpdate(bid,{status:true,borrower:null,borrow_date:null})
+    await User.findByIdAndUpdate(userId,{$pull:{loaned_books:bid}})
     res.redirect("/books/loaned")
 
 }
+
+
+
+
 
 var issueBook = async (req, res) => {
     const {bid,total_copies}=req.body
@@ -64,32 +65,36 @@ var issueBook = async (req, res) => {
     await BookCopy.countDocuments({status:false,book:bid}).then((alreadyBorrowed)=>{
 
         const currentCopiesAvailable=total_copies-alreadyBorrowed;
-
         if (currentCopiesAvailable>0){
-
-
              BookCopy.countDocuments({book:bid}).then((totalInstances)=>{
 
 
                 if(totalInstances<total_copies){
                     const bookInstance = new BookCopy({book:bid,status:false,borrow_date:borrowDate,borrower:userId}).populate('book')
+                    User.findById(userId,function(err,user){
+                        user.loaned_books.push(bookInstance.id)
+                        user.save()
+                    })
                     bookInstance.save();
-                    res.redirect("/book/"+bid)
+                    res.redirect("/books/loaned")
                 }else{
                     BookCopy.find({book:bid,status:true},function(err,bookInstances){
                         if(err){
                             console.log(err)
                         }else{
+                            User.findById(userId,function(err,user){
+                                user.loaned_books.push(bookInstances[0].id)
+                                user.save()
+                            })
                             bookInstances[0].status=false
                             bookInstances[0].borrower=userId
                             bookInstances[0].borrow_date=borrowDate
                             bookInstances[0].save(function(){
-                                res.redirect("/book/"+bid)
+                            res.redirect("/books/loaned")
                             })
                         }
 
                     })
-                 // BookCopy.findOneAndUpdate({book:bid},{status:false,borrower:userId,borrow_date:borrowDate})
                 }
                }
           )
@@ -100,6 +105,12 @@ var issueBook = async (req, res) => {
     // return with appropriate status
     // Optionally redirect to page or display on same
 }
+
+
+
+
+
+
 
 var searchBooks = (req, res) => {
     // TODO: extract search details

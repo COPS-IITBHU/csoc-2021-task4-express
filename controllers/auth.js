@@ -7,26 +7,30 @@ var getLogin = (req, res) => {
   //TODO: render login page
 };
 
-var postLogin = (req, res) => {
+// var postLogin = (req, res) => {
+//   passport.authenticate('local', {
+//     successRedirect: '/books',
+//     failureRedirect: '/login',
+//   })(req, res);
+// };
 
-  // TODO: authenticate using passport
-  //On successful authentication, redirect to next page
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password
-  });
 
-  req.login(user, function(err){
-    if (err) {
-      
-      res.render("login",{error:"Wrong username or password!",title:'Login'})
-    } else {
-      passport.authenticate("local")(req, res, function(){
-        res.redirect("/books");
-      });
-    }
-  });
+var postLogin = (req, res ,next) => {
+  passport.authenticate('local', function (err, user, info) {
+
+    if (err) { console.log(err); }
+    if (!user) { 
+
+      return res.render('login',{title:'Login',error:info.message}); }
+    req.logIn(user, function(err) {
+      if (err) { console.log(err); }
+      return res.redirect('/books');
+    });
+  })(req, res, next);
 };
+
+
+
 
 var logout = (req, res) => {
   // TODO: write code to logout user and redirect back to the page
@@ -53,10 +57,7 @@ var postRegister = (req, res) => {
   else{
   User.register({username: req.body.username}, req.body.password, function(err, user){
     if (err) {
-      console.log(err);
-      res.render("register",{error:"User with username already exists ",title:'Register'})
-
-
+      res.render("register",{error:"User with the same username already exists ",title:'Register'})
     } else {
       passport.authenticate("local")(req, res, function(){
         res.redirect("/books");

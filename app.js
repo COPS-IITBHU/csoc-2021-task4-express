@@ -38,7 +38,7 @@ app.set("view engine", "ejs");
 
 //THIS MIDDLEWARE ALLOWS US TO ACCESS THE LOGGED IN USER AS currentUser in all views
 app.use(function (req, res, next) {
-  res.locals.currentUser = req.user;
+  res.locals.currentUser = req.user;  
   next();
 });
 
@@ -83,6 +83,7 @@ TODO: Your task is to complete below controllers in controllers/auth.js
 If you need to add any new route add it here and define its controller
 controllers folder.
 */
+
 
 app.get("/login", auth.getLogin);
 
