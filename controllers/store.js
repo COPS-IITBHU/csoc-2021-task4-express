@@ -41,25 +41,7 @@ var getLoanedBooks = async (req, res) => {
             })
         })
     })
-    // console.log(loaned_copies);
-    // res.redirect('/');
-    // Book.find((err,books)=>{
-    //     if(err) throw err;
-    //     console.log(req.user.loaned_books.map((bookCopyId)=>{
-    //         return {
-    //             book: books.find(book=>book.id==bookCopyId),
-    //             id:bookCopyId
-    //         }
-    //     }));
-    //     res.render('loaned_books',{books:req.user.loaned_books.map((bookCopyId)=>{
-    //         return {
-    //             book: books.find(book=>book.id==bookCopyId),
-    //             id:bookCopyId
-    //         }
-    //     }),title:`Loaned Books | ${req.user.username}`});
-
-    // })
-
+ 
 
 }
 
