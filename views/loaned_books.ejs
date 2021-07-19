@@ -22,13 +22,17 @@
             <tbody>
               <% books.forEach(function(copy,i){%>
               <tr>
-                <th scope="row"><%= i %></th>
+                <th scope="row"><%= i+1 %></th>
                 <td><a href="/book/<%=copy.book.id%>/"><%= copy.book.title %></a></td>
                 <td><%= copy.book.author %></td>
                 <td><%= copy.book.genre %></td>
                 <td><%= copy.borrow_date %></td>
                 <td>
                   <!-- TODO: Create a Return book tag that is used for returning the book -->
+                <form action="/books/loaned/return" method="POST">
+                  <input type="text" hidden value="<%= copy.id %>" name="bid" />
+                  <button class="btn btn-light btn-md" type="submit" >Return book</button>
+                </form>
                 </td>
               </tr>
               <%})%>

@@ -8,7 +8,7 @@ var getLogin = (req, res) => {
 };
 
 var postLogin = (req, res) => {
-  console.log(req.body);
+
   // TODO: authenticate using passport
   //On successful authentication, redirect to next page
   const user = new User({
@@ -40,7 +40,7 @@ var getRegister = (req, res) => {
 };
 
 var postRegister = (req, res) => {
-  console.log(req.body);
+  
   // TODO: Register user to User db using passport
   //On successful authentication, redirect to next page
 
