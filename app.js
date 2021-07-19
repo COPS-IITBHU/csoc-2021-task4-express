@@ -38,11 +38,12 @@ app.use(function (req, res, next) {
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
 const mongoURI = require('./config/key').mongoURI;
-mongoose.connect(mongoURI,{useNewUrlParser:true,useUnifiedTopology:true});
+mongoose.connect(mongoURI,{useNewUrlParser:true,useUnifiedTopology:true,useCreateIndex:true});
 
 //Populate with sample data
 // const pop = require('./test');
 // pop.populateBook();
+// pop.populateBookCopy();
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
@@ -60,13 +61,17 @@ app.get("/book/:id", store.getBook);
 
 app.get("/books/loaned",
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+  middleware.isLoggedIn,
  store.getLoanedBooks);
 
 app.post("/books/issue", 
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+middleware.isLoggedIn,
 store.issueBook);
 
 app.post("/books/search-book", store.searchBooks);
+
+app.post("/books/return",store.returnBook);
 
 /* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
 
