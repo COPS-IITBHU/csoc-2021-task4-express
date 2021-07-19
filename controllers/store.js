@@ -23,29 +23,47 @@ var getBook = (req, res) => {
     });
 }
 
-var getLoanedBooks = (req, res) => {
+var getLoanedBooks = async (req, res) => {
 
     //TODO: access the books loaned for this user and render loaned books page
+    console.log(req.user.loaned_books);
     
-    Book.find((err,books)=>{
-        if (err) throw err;
-        BookCopy.find({status:false},(er,bookCopies)=>{
-            if(er) throw er;
-            res.render('loaned_books',{books:bookCopies.map((bookCopy)=>{
-                return {
-                    book: books.find(book=>book.id=bookCopy.book),
-                    status:bookCopy.status,
-                    id:bookCopy.id
-                }
-            }),title:`Loaned Books | User`});
-        });
+    BookCopy.find((err,bookCopies)=>{
+        if(err) throw err;
+        Book.find((err,books)=>{
+            res.render('loaned_books',{
+                books: bookCopies.filter(bookCopy => req.user.loaned_books.includes(bookCopy.id))
+                .map(bookCopy=>({
+                    book: books.find(book=>(book.id == bookCopy.book)),
+                    id: bookCopy.id,
+                })),
+                title: `Loaned Books | ${req.user.username}`
+            })
+        })
     })
+    // console.log(loaned_copies);
+    // res.redirect('/');
+    // Book.find((err,books)=>{
+    //     if(err) throw err;
+    //     console.log(req.user.loaned_books.map((bookCopyId)=>{
+    //         return {
+    //             book: books.find(book=>book.id==bookCopyId),
+    //             id:bookCopyId
+    //         }
+    //     }));
+    //     res.render('loaned_books',{books:req.user.loaned_books.map((bookCopyId)=>{
+    //         return {
+    //             book: books.find(book=>book.id==bookCopyId),
+    //             id:bookCopyId
+    //         }
+    //     }),title:`Loaned Books | ${req.user.username}`});
+
+    // })
 
 
 }
 
 var issueBook = (req, res) => {
-    
     // TODO: Extract necessary book details from request
     // return with appropriate status
     // Optionally redirect to page or display on same
@@ -55,7 +73,10 @@ var issueBook = (req, res) => {
         } else {
             bookCopies[0].status = false;
             bookCopies[0].save().then((_)=>{
-                res.send('Successfully Issued');
+                req.user.loaned_books.push(bookCopies[0].id);
+                req.user.save().then((_)=>{
+                    res.send('Successfully Issued');
+                })
             });
         }
     })
@@ -68,7 +89,7 @@ var returnBook = (req, res) => {
         } else {
             bookCopy.status = true;
             bookCopy.save().then((_)=>{
-                res.send('Book Saved');
+                res.send('Book Returned');
             });
         }
     })
