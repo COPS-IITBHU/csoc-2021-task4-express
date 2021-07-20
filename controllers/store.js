@@ -54,6 +54,8 @@ var issueBook = (req, res) => {
             res.send('Oh no! no more books')
         } else {
             bookCopies[0].status = false;
+            bookCopies[0].borrow_date = Date.now();
+            bookCopies[0].borrower = req.user.id;
             bookCopies[0].save().then((_)=>{
                 req.user.loaned_books.push(bookCopies[0].id);
                 req.user.save().then((_)=>{
@@ -66,12 +68,19 @@ var issueBook = (req, res) => {
 
 var returnBook = (req, res) => {
     BookCopy.findById(req.body.bcid,(err,bookCopy)=>{
+        console.log(req.body);
+        console.log(bookCopy);
         if (bookCopy.status) {
             res.send('Book was already Returned');
         } else {
             bookCopy.status = true;
+            bookCopy.borrow_date = null;
+            bookCopy.borrower=null;
+            req.user.loaned_books.splice(req.user.loaned_books.indexOf(req.body.bcid),1)
             bookCopy.save().then((_)=>{
-                res.send('Book Returned');
+                req.user.save().then((_)=>{
+                    res.render('loaned_books',{success_message:'Book Returned'});
+                })
             });
         }
     })
