@@ -3,7 +3,7 @@ const User = require('../models/user');
 
 var getLogin = (req, res) => {
   //TODO: render login page
-  res.render('login',{title:'Login',message:req.query.message})
+  res.render('login',{title:'Login',error_message:req.query.message})
 };
 
 //  (req, res) => {
@@ -33,7 +33,7 @@ var postRegister = (req, res) => {
   User.register(newUser,req.body.password,(err,user)=>{
     if (err) {
       console.log(err);
-      res.render('register',{title:'Register',message:err.message});
+      res.render('register',{title:'Register',error_message:err.message});
     }
     console.log(user);
     res.send('hello');
