@@ -13,12 +13,16 @@ var getAllBooks = (req, res) => {
 
 var getBook = (req, res) => {
     //TODO: access the book with a given id and render book detail page
-   
     Book.findById(req.params.id,(err,book)=>{
         if(err) throw err;
         BookCopy.find({book: mongoose.Types.ObjectId(req.params.id),status:true},(er,bookCopies)=>{
             if(er) throw er;
-        res.render('book_detail',{book:book,num_available:bookCopies.length, title: `Book Details | ${book.title}`});
+        res.render('book_detail',{
+            book:book,num_available:bookCopies.length,
+             title: `Book Details | ${book.title}`,
+             success_message: req.query.issue=='success'?'Book Issued Successfully':undefined,
+             error_message: req.query.issue=='failure'?'Book Issue Failed':undefined
+            });
         });
     });
 }
@@ -37,7 +41,7 @@ var getLoanedBooks = async (req, res) => {
                 })),
                 title: `Loaned Books | ${req.user.username}`,
                 success_message: req.query.ret == 'success'?"Book returned successfully": undefined,
-                message: req.query.ret =='failure'?"Book could not be returned": undefined,
+                error_message: req.query.ret =='failure'?"Book could not be returned": undefined,
             })
         })
     })
@@ -49,21 +53,26 @@ var issueBook = (req, res) => {
     // TODO: Extract necessary book details from request
     // return with appropriate status
     // Optionally redirect to page or display on same
-    BookCopy.find({book: req.body.bid,status:true},(err,bookCopies)=>{
-        if(bookCopies.length==0){
-            res.send('Oh no! no more books')
-        } else {
-            bookCopies[0].status = false;
-            bookCopies[0].borrow_date = Date.now();
-            bookCopies[0].borrower = req.user.id;
-            bookCopies[0].save().then((_)=>{
-                req.user.loaned_books.push(bookCopies[0].id);
-                req.user.save().then((_)=>{
-                    res.send('Successfully Issued');
-                })
-            });
-        }
-    })
+    try {
+            BookCopy.find({book: req.body.bid,status:true},(err,bookCopies)=>{
+            if(bookCopies.length==0){
+                res.redirect(`/book/${req.body.bid}/?issue=failure`);
+            } else {
+                bookCopies[0].status = false;
+                bookCopies[0].borrow_date = Date.now();
+                bookCopies[0].borrower = req.user.id;
+                bookCopies[0].save().then((_)=>{
+                    req.user.loaned_books.push(bookCopies[0].id);
+                    req.user.save().then((_)=>{
+                        res.redirect(`/book/${req.body.bid}/?issue=success`);
+                    })
+                });
+            }
+        });
+    } catch {
+        res.redirect(`/book/${req.body.bid}/?issue=failure`);
+
+    }
 }
 
 var returnBook = (req, res) => {
