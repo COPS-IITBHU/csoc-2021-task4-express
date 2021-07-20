@@ -26,8 +26,6 @@ var getBook = (req, res) => {
 var getLoanedBooks = async (req, res) => {
 
     //TODO: access the books loaned for this user and render loaned books page
-    console.log(req.user.loaned_books);
-    
     BookCopy.find((err,bookCopies)=>{
         if(err) throw err;
         Book.find((err,books)=>{
@@ -37,7 +35,9 @@ var getLoanedBooks = async (req, res) => {
                     book: books.find(book=>(book.id == bookCopy.book)),
                     id: bookCopy.id,
                 })),
-                title: `Loaned Books | ${req.user.username}`
+                title: `Loaned Books | ${req.user.username}`,
+                success_message: req.query.ret == 'success'?"Book returned successfully": undefined,
+                message: req.query.ret =='failure'?"Book could not be returned": undefined,
             })
         })
     })
@@ -67,23 +67,27 @@ var issueBook = (req, res) => {
 }
 
 var returnBook = (req, res) => {
-    BookCopy.findById(req.body.bcid,(err,bookCopy)=>{
-        console.log(req.body);
-        console.log(bookCopy);
-        if (bookCopy.status) {
-            res.send('Book was already Returned');
-        } else {
-            bookCopy.status = true;
-            bookCopy.borrow_date = null;
-            bookCopy.borrower=null;
-            req.user.loaned_books.splice(req.user.loaned_books.indexOf(req.body.bcid),1)
-            bookCopy.save().then((_)=>{
-                req.user.save().then((_)=>{
-                    res.render('loaned_books',{success_message:'Book Returned'});
-                })
-            });
-        }
-    })
+    try{
+        BookCopy.findById(req.body.bcid,(err,bookCopy)=>{
+            if(err) throw err;
+            if (bookCopy.status) {
+                res.send('Book was already Returned');
+            } else {
+                bookCopy.status = true;
+                bookCopy.borrow_date = null;
+                bookCopy.borrower=null;
+                req.user.loaned_books.splice(req.user.loaned_books.indexOf(req.body.bcid),1)
+                bookCopy.save().then((_)=>{
+                    req.user.save().then((_)=>{
+                        res.redirect('/books/loaned?ret=success');
+                    })
+                });
+            }
+        });
+    } catch {
+        res.redirect('/books/loaned?ret=failure');
+    }
+
 }
 
 var searchBooks = (req, res) => {
