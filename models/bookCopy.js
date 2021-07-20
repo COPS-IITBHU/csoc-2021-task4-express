@@ -12,7 +12,7 @@ var bookCopySchema=new mongoose.Schema({
      required: true
  },
  //TRUE IF AVAILABLE TO BE ISSUED, ELSE FALSE 
- borrow_data: {
+ borrow_date: {
      type: Date,
     //  required: function() {
     //      return !this.status;
