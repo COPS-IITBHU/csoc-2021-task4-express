@@ -91,6 +91,11 @@ app.post("/register", auth.postRegister);
 
 app.get("/logout", auth.logout);
 
+app.use((req,res,next)=>{
+  res.status(404);
+  res.send(`Error 404 : ${req.url} Not Found`)
+})
+
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`);
 });
