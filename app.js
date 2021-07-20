@@ -8,9 +8,10 @@ var User = require("./models/user");
 var localStrategy = require("passport-local");
 //importing the middleware object to use its functions
 var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
-var port = process.env.PORT || 3000;
-
-
+var port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
 
 mongoose.set('useFindAndModify', false);
 
