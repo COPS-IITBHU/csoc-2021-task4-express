@@ -2,8 +2,12 @@
 <html lang="en">
   <%- include ("./partials/header.ejs") %>
   <body>
+    <div class="container-fluid">
+      <div class="row">
+    <%- include("./partials/sidebar") %> 
+    <div class = "col-sm-10">
     <h3>Loaned Books list</h3>
-
+    <%- include("./partials/message") %> 
     <table class="table">
       <thead>
         <tr>
@@ -36,5 +40,8 @@
         <%})%>
       </tbody>
     </table>
+  </div>
+  </div>
+  </div>
   </body>
 </html>
