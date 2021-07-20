@@ -38,6 +38,7 @@ var getLoanedBooks = async (req, res) => {
                 .map(bookCopy=>({
                     book: books.find(book=>(book.id == bookCopy.book)),
                     id: bookCopy.id,
+                    borrow_date: `${bookCopy.borrow_date.getDate()}/${bookCopy.borrow_date.getMonth()+1}/${bookCopy.borrow_date.getFullYear()}`,
                 })),
                 title: `Loaned Books | ${req.user.username}`,
                 success_message: req.query.ret == 'success'?"Book returned successfully": undefined,
