@@ -5,9 +5,11 @@ var passport = require("passport");
 var auth = require("./controllers/auth");
 var store = require("./controllers/store");
 var User = require("./models/user");
-var localStrategy = require("passport-local");
+var flash = require('connect-flash');
+var db = require("./book_database/db.js")
 //importing the middleware object to use its functions
-var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
+var middleware = require("./middleware"); 
+require('./passport')(passport)//no need of writing index.js as directory always calls index.js by default
 var port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
@@ -23,7 +25,7 @@ app.use(
 
 app.use(passport.initialize()); //middleware that initialises Passport.
 app.use(passport.session());
-passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
+// passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
 passport.serializeUser(User.serializeUser()); //used to serialize the user for the session
 passport.deserializeUser(User.deserializeUser()); // used to deserialize the user
 
@@ -38,6 +40,14 @@ app.use(function (req, res, next) {
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
 
+const mongoDB = 'mongodb+srv://user008:cq1569008@cluster0.avvqc.mongodb.net/library_database?retryWrites=true&w=majority';
+mongoose.connect(mongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+})
+.then(() => console.log("Mongoose Connected.."))
+.catch(err => console.log(err.reason));
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
 });
@@ -52,15 +62,23 @@ app.get("/books", store.getAllBooks);
 
 app.get("/book/:id", store.getBook);
 
-app.get("/books/loaned",
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
- store.getLoanedBooks);
+app.get(
+  "/books/loaned",
+  //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+  middleware.isLoggedIn,
+  store.getLoanedBooks
+);
 
-app.post("/books/issue", 
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
-store.issueBook);
+app.post(
+  "/books/issue",
+  //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+  middleware.isLoggedIn,
+  store.issueBook
+);
 
 app.post("/books/search-book", store.searchBooks);
+
+app.post("/books/return", store.returnBooks);
 
 /* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
 

@@ -1,0 +1,344 @@
+{
+"books": [
+  {
+    "Title": "The Alchemist",
+    "Author": "Paulo Coelho",
+    "Price": 175,
+    "Genre": "Fantasy",
+    "Pages": 154,
+    "Type": "Paperback",
+    "rating": 3.9,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1466865542l/18144590._SY475_.jpg"
+  },
+  {
+    "Title": "The Book Theif",
+    "Author": "Markus Zusak",
+    "Price": 248,
+    "Genre": "Fiction",
+    "Pages": 584,
+    "Type": "Paperback",
+    "rating": 4.4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1522157426l/19063._SY475_.jpg"
+  },
+  {
+    "Title": "Ikigai",
+    "Author": "Hector Garcia & Francsec Miralles",
+    "Price": 499,
+    "Genre": "Self help",
+    "Pages": 192,
+    "Type": "Hardcover",
+    "rating": 4.6,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1456092979l/28787203.jpg"
+  },
+  {
+    "Title": "A New Idea of India",
+    "Author": "Harsh Madhusudhan & Rajeev Mantri",
+    "Price": 500,
+    "Genre": "Non Fiction",
+    "Pages": 384,
+    "Type": "Hardcover",
+    "rating": 4.4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1598332910l/55113347._SY475_.jpg"
+  },
+  {
+    "Title": "The 5 am club",
+    "Author": "Robin Sharma",
+    "Price": 204,
+    "Genre": "Self help",
+    "Pages": 299,
+    "Type": "Paperback",
+    "rating": 3.8,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1545910967l/37502596._SY475_.jpg"
+  },
+  {
+    "Title": "The hunt for Red October",
+    "Author": "Tom Clancy",
+    "Price": 278,
+    "Genre": "Fiction",
+    "Pages": 296,
+    "Type": "Paperback",
+    "rating": 4.1,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1281995542l/19691.jpg"
+  },
+  {
+    "Title": "The Complete Book of Yoga",
+    "Author": "Swami Vivekananda",
+    "Price": 139,
+    "Genre": "Non Fiction",
+    "Pages": 432,
+    "Type": "Paperback",
+    "rating": 4.2,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1446129976l/27388301._SY475_.jpg"
+  },
+  {
+    "Title": "Malgudi Days",
+    "Author": "R.K. Narayan",
+    "Price": 125,
+    "Genre": "Fiction",
+    "Pages": 304,
+    "Type": "Paperback",
+    "rating": 4.2,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1455574981l/14082.jpg"
+  },
+  {
+    "Title": "Being Different",
+    "Author": "Rajiv Malhotra",
+    "Price": 330,
+    "Genre": "Non Fiction",
+    "Pages": 438,
+    "Type": "Paperback",
+    "rating": 4.5,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1340783111l/13099825.jpg"
+  },
+  {
+    "Title": "Defence of Hindu Society",
+    "Author": "Sita Ram Goel",
+    "Price": 79,
+    "Genre": "Non Fiction",
+    "Pages": 118,
+    "Type": "Paperback",
+    "rating": 4.5,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1482061834l/1247546._SY475_.jpg"
+  },
+  {
+    "Title": "The Indian Conservative",
+    "Author": "Jaithirth Rao",
+    "Price": 408,
+    "Genre": "Non Fiction",
+    "Pages": 280,
+    "Type": "Hardcover",
+    "rating": 3.5,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1573201276l/48731638._SX318_.jpg"
+  },
+  {
+    "Title": 1984,
+    "Author": "George Orwell",
+    "Price": 149,
+    "Genre": "Fiction",
+    "Pages": 304,
+    "Type": "Paperback",
+    "rating": 4.2,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1532714506l/40961427._SX318_.jpg"
+  },
+  {
+    "Title": "The Godfather",
+    "Author": "Mario Puzo",
+    "Price": 275,
+    "Genre": "Fiction",
+    "Pages": 608,
+    "Type": "Paperback",
+    "rating": 4.4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1394988109l/22034._SY475_.jpg"
+  },
+  {
+    "Title": "Decolonizing the Hindu Mind",
+    "Author": "Koenrad Elst",
+    "Price": 595,
+    "Genre": "Non Fiction",
+    "Pages": 657,
+    "Type": "Paperback",
+    "rating": 4.5,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1476219767l/159330._SY475_.jpg"
+  },
+  {
+    "Title": "Becoming",
+    "Author": "Michelle Obama",
+    "Price": 628,
+    "Genre": "Biography",
+    "Pages": 628,
+    "Type": "Hardcover",
+    "rating": 4.5,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1528206996l/38746485.jpg"
+  },
+  {
+    "Title": "Sapiens",
+    "Author": "Yuval Noah Harari",
+    "Price": 345,
+    "Genre": "Non Fiction",
+    "Pages": 512,
+    "Type": "Paperback",
+    "rating": 4.4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1595674533l/23692271._SY475_.jpgg"
+  },
+  {
+    "Title": "Unfinished",
+    "Author": "Priyanka Chopra",
+    "Price": 452,
+    "Genre": "Biography",
+    "Pages": 240,
+    "Type": "Hardcover",
+    "rating": 3.8,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1606168817l/40599385._SY475_.jpg"
+  },
+  {
+    "Title": "The Prince",
+    "Author": "Niccolo Machiavelli",
+    "Price": 99,
+    "Genre": "Non Fiction",
+    "Pages": 184,
+    "Type": "Paperback",
+    "rating": 3.8,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1390055828l/28862.jpg"
+  },
+  {
+    "Title": "The Girl on the Train",
+    "Author": "Paula Hawkins",
+    "Price": 199,
+    "Genre": "Fiction",
+    "Pages": 317,
+    "Type": "Paperback",
+    "rating": 3.9,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1574805682l/22557272.jpg"
+  },
+  {
+    "Title": "And then there were none",
+    "Author": "Agatha Christie",
+    "Price": 179,
+    "Genre": "Fiction",
+    "Pages": 256,
+    "Type": "Paperback",
+    "rating": 4.2,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1391120695l/16299.jpg"
+  },
+  {
+    "Title": "The Republic",
+    "Author": "Plato",
+    "Price": 149,
+    "Genre": "Non Fiction",
+    "Pages": 400,
+    "Type": "Paperback",
+    "rating": 3.9,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1386925655l/30289.jpg"
+  },
+  {
+    "Title": "Immortals of Meluha",
+    "Author": "Amish",
+    "Price": 399,
+    "Genre": "Fiction",
+    "Pages": 416,
+    "Type": "Paperback",
+    "rating": 4.1,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1334659192l/7913305.jpg"
+  },
+  {
+    "Title": "Secret of Nagas",
+    "Author": "Amish",
+    "Price": 450,
+    "Genre": "Fiction",
+    "Pages": 372,
+    "Type": "Paperback",
+    "rating": 4.1,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1532560274l/40948565._SY475_.jpg"
+  },
+  {
+    "Title": "The Politics",
+    "Author": "Aristotle",
+    "Price": 141,
+    "Genre": "Non Fiction",
+    "Pages": 304,
+    "Type": "Paperback",
+    "rating": 4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1347850464i/982463._SX50_.jpg"
+  },
+  {
+    "Title": "Nationalism",
+    "Author": "Rabindranath Tagore",
+    "Price": 70,
+    "Genre": "Non Fiction",
+    "Pages": 120,
+    "Type": "Paperback",
+    "rating": 4.1,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1401104243l/166312.jpg"
+  },
+  {
+    "Title": "Atomic Habits",
+    "Author": "James Clear",
+    "Price": 445,
+    "Genre": "Self help",
+    "Pages": 226,
+    "Type": "Paperback",
+    "rating": 4.4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1535115320l/40121378._SY475_.jpg"
+  },
+  {
+    "Title": "Art of War",
+    "Author": "Sun Tzu",
+    "Price": 70,
+    "Genre": "Non Fiction",
+    "Pages": 100,
+    "Type": "Paperback",
+    "rating": 4,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1453417993l/10534._SY475_.jpg"
+  },
+  {
+    "Title": "Keepers of Kalachakra",
+    "Author": "Ashwin Sanghi",
+    "Price": 268,
+    "Genre": "Fiction",
+    "Pages": 420,
+    "Type": "Paperback",
+    "rating": 3.8,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1512604305i/36982571._SY75_.jpg"
+  },
+  {
+    "Title": "The Krishna Key",
+    "Author": "Ashwin Sanghi",
+    "Price": 297,
+    "Genre": "Fiction",
+    "Pages": 485,
+    "Type": "Paperback",
+    "rating": 3.6,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1341289060l/15733523.jpg"
+  },
+  {
+    "Title": "Chanakya's Chant",
+    "Author": "Ashwin Sanghi",
+    "Price": 300,
+    "Genre": "Fiction",
+    "Pages": 489,
+    "Type": "Paperback",
+    "rating": 3.7,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1327939570l/10098912.jpg"
+  },
+  {
+    "Title": "Alex Ferguson: My Autobiography",
+    "Author": "Alex Ferguson",
+    "Price": 489,
+    "Genre": "Biography",
+    "Pages": 448,
+    "Type": "Paperback",
+    "rating": 3.9,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1380212081l/18588024.jpg"
+  },
+  {
+    "Title": "Bhagavad Gita as it is",
+    "Author": "Swami Prabhupada",
+    "Price": 237,
+    "Genre": "Non Fiction",
+    "Pages": 924,
+    "Type": "Hardcover",
+    "rating": 4.2,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1528088332l/991544._SX318_.jpg"
+  },
+  {
+    "Title": "The ONE Thing",
+    "Author": "Gary W. Keller and Jay Papasan.",
+    "Price": 260,
+    "Genre": "Self help",
+    "Pages": 240,
+    "Type": "Hardcover",
+    "rating": 4.1,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1559563270l/16256798._SX318_.jpg"
+  },
+  {
+    "Title": "Chanakya Neeti",
+    "Author": "Chanakya",
+    "Price": 123,
+    "Genre": "Non Fiction",
+    "Pages": 208,
+    "Type": "Paperback",
+    "rating": 3.9,
+    "URL": "https://i.gr-assets.com/images/S/compressed.photo..com/books/1576405171l/49246644._SY475_.jpg"
+  }
+]
+}
