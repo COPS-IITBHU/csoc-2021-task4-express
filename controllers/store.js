@@ -2,6 +2,7 @@ const Book = require('../models/book');
 const BookCopy = require('../models/bookCopy');
 const mongoose = require('mongoose');
 const book = require('../models/book');
+const search = require('../utils/search');
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
     Book.find((err,books)=>{
@@ -104,6 +105,35 @@ var searchBooks = (req, res) => {
     // TODO: extract search details
     // query book model on these details
     // render page with the above details
+    console.log(req.body);
+    let title_query = req.body.title.trim(),
+    author_query = req.body.author.trim(),
+    genre_query = req.body.genre.trim();
+    Book.find((err,books)=>{
+        let search_result = books.map((book)=>{
+            let title_score = title_query !=''?search.matchScore(title_query,book.title):1;
+            let genre_score = genre_query !=''?search.matchScore(genre_query,book.genre):title_score;
+            let author_score = author_query !=''?search.matchScore(author_query,book.author):(genre_score+title_score)/2;
+            console.log(title_score);
+            console.log(genre_score);
+            console.log(author_score);
+            return {
+                book,
+                score: (title_score + genre_score + author_score)/3
+            };
+
+        })
+        .filter(search=>search.score>=0.5); //can be adjusted for different 'matchness'
+        search_result.sort((a,b)=>b.score - a.score); // rank in matchness instead 
+        res.render(
+            "book_list", { books:search_result.map((result)=>result.book),
+             title: "Books | Library" ,
+             title_query,
+             author_query,
+             genre_query,
+            });
+    });
+    
 }
 
 module.exports = {
