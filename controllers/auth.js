@@ -44,7 +44,6 @@ var postRegister = (req, res) => {
       res.render('register',{title:'Register',error_message:err.message});
       return;
     }
-    console.log(user);
     passport.authenticate('local',{successRedirect:'/',failureRedirect:'/login?message=Authentication+Failed'})(req,res);
   })
   } catch{
