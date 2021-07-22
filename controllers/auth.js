@@ -29,6 +29,15 @@ var getRegister = (req, res) => {
 var postRegister = (req, res) => {
   // TODO: Register user to User db using passport
   //On successful authentication, redirect to next page
+  try {
+  if(!req.body.password || !req.body.username || !req.body.confirmPassword) {
+    res.render('register',{title:'Register',error_message:'Please enter all fields'});
+    return;
+  }
+  if (req.body.password != req.body.confirmPassword){
+    res.render('register',{title:'Register',error_message:'Password and Confirm Password are not same!'});
+    return;
+  }
   let newUser = new User({username: req.body.username});
   User.register(newUser,req.body.password,(err,user)=>{
     if (err) {
@@ -38,6 +47,9 @@ var postRegister = (req, res) => {
     console.log(user);
     res.send('hello');
   })
+  } catch{
+    res.render('register',{title:'Register',error_message:'Something went wrong. Please try again later'});
+  }
 };
 
 module.exports = {
