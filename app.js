@@ -40,10 +40,6 @@ app.use(function (req, res, next) {
 const mongoURI = require('./config/key').mongoURI;
 mongoose.connect(mongoURI,{useNewUrlParser:true,useUnifiedTopology:true,useCreateIndex:true});
 
-//Populate with sample data
-// const pop = require('./test');
-// pop.populateBook();
-// pop.populateBookCopy();
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
