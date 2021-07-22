@@ -2,6 +2,7 @@ const Book = require('../models/book');
 const BookCopy = require('../models/bookCopy');
 const mongoose = require('mongoose');
 const book = require('../models/book');
+const search = require('../utils/search');
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
     Book.find((err,books)=>{
@@ -38,6 +39,7 @@ var getLoanedBooks = async (req, res) => {
                 .map(bookCopy=>({
                     book: books.find(book=>(book.id == bookCopy.book)),
                     id: bookCopy.id,
+                    borrow_date: `${bookCopy.borrow_date.getDate()}/${bookCopy.borrow_date.getMonth()+1}/${bookCopy.borrow_date.getFullYear()}`,
                 })),
                 title: `Loaned Books | ${req.user.username}`,
                 success_message: req.query.ret == 'success'?"Book returned successfully": undefined,
@@ -103,6 +105,38 @@ var searchBooks = (req, res) => {
     // TODO: extract search details
     // query book model on these details
     // render page with the above details
+    let title_query = req.body.title.trim().toLowerCase(),
+    author_query = req.body.author.trim().toLowerCase(),
+    genre_query = req.body.genre.trim().toLowerCase();
+    Book.find((err,books)=>{
+        let search_result = books.map((book)=>{
+            let scores = [];
+            if (title_query != '') {
+                scores.push(search.matchScore(title_query,book.title.toLowerCase()));
+            }
+            if (genre_query != '') {
+                scores.push(search.matchScore(genre_query,book.genre.toLowerCase()));
+            }
+            if (author_query != '') {
+                scores.push(search.matchScore(author_query,book.author.toLowerCase()));
+            }
+            return {
+                book,
+                score: scores.reduce((sum,elem)=> sum +elem,0)
+            };
+
+        })
+        .filter(search=>search.score>=0.5); //can be adjusted for different 'matchness'
+        search_result.sort((a,b)=>b.score - a.score); // rank in matchness instead 
+        res.render(
+            "book_list", { books:search_result.map((result)=>result.book),
+             title: "Books | Library" ,
+             title_query,
+             author_query,
+             genre_query,
+            });
+    });
+    
 }
 
 module.exports = {
