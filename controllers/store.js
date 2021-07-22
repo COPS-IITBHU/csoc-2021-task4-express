@@ -1,9 +1,14 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config()
+}
+const db_url = process.env.DB_URI
+
 const mongoose = require('mongoose');
 const Book = require("../models/book");
 const User = require("../models/user");
 const Bookcopy = require("../models/bookCopy");
 
-mongoose.connect('mongodb+srv://tiger:firstapp@cluster0.tlwt0.mongodb.net/Library?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("MONGO CONNECTION OPEN!!!")
     })
@@ -53,7 +58,7 @@ var issueBook = async (req, res) => {
             break
         }
     }
-    
+
     await User.findByIdAndUpdate(user.id, { $push: { loaned_books: id } })
     res.redirect("/")
 }

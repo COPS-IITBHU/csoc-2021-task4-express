@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV !== "production") {
+  require('dotenv').config()
+}
+const db_url = process.env.DB_URI
+
 const express = require("express");
 const app = express();
 var mongoose = require("mongoose");
@@ -37,7 +42,7 @@ app.use(function (req, res, next) {
 });
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
-mongoose.connect('mongodb+srv://tiger:firstapp@cluster0.tlwt0.mongodb.net/Library?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MONGO CONNECTION OPEN!!!")
   })

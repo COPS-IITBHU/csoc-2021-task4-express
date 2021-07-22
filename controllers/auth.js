@@ -1,7 +1,12 @@
+if(process.env.NODE_ENV!=="production"){
+  require('dotenv').config()
+}
+const db_url=process.env.DB_URI
+
 const mongoose = require('mongoose');
 var User = require("../models/user");
 var passport = require("passport");
-mongoose.connect('mongodb+srv://tiger:firstapp@cluster0.tlwt0.mongodb.net/Library?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MONGO CONNECTION OPEN!!!")
   })
