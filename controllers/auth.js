@@ -41,11 +41,11 @@ var postRegister = (req, res) => {
   let newUser = new User({username: req.body.username});
   User.register(newUser,req.body.password,(err,user)=>{
     if (err) {
-      console.log(err);
       res.render('register',{title:'Register',error_message:err.message});
+      return;
     }
     console.log(user);
-    res.send('hello');
+    passport.authenticate('local',{successRedirect:'/',failureRedirect:'/login?message=Authentication+Failed'})(req,res);
   })
   } catch{
     res.render('register',{title:'Register',error_message:'Something went wrong. Please try again later'});
