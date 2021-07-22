@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Log-in</title>
+
+    <style>
+         ul{
+            margin-left: 50px;
+            margin-top: 10px;
+            
+        }
+        a{
+            text-decoration: none;
+        }
+        #loginbox {
+            text-align: center;
+            margin:auto;
+
+        }
+
+        .mainbox {
+            width: 560px;
+            margin: auto;
+            border: 2px solid rgb(71, 160, 172);
+            box-shadow: 2px 2px rgb(88, 88, 88);
+        }
+
+        #top {
+            display: inline-flex;
+            font-weight: bolder;
+            font-size: 40px;
+        }
+
+        #loginicon {
+            margin: auto;
+            padding: 10px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        .form-box {
+            display: inline;
+            width: 400px;
+            margin: auto;
+            border: none;
+            border-bottom: 2px solid black;
+            margin-top: 50px;
+            margin-left: 15px;
+            outline: none;
+
+        }
+
+        #mailicon,#keyicon {
+            margin-left: 10px;
+            color: rgb(88, 88, 88);
+        }
+
+        #InputEmail {
+            margin-left: 20px;
+        }
+
+
+        #login {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .redirectRegister {
+            margin-top: 0px;
+            margin-bottom: 30px;
+        }
+
+        #register {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+
+        #openeye {
+            display: none;
+        }
+
+        #registerLink {
+            text-decoration: none;
+            color: white;
+        }
+
+       
+    </style>
+</head>
+
+<body>
+    <ul class="sidebar-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/books">All books</a></li>
+    </ul>
+    <div id="loginbox">
+
+    
+    <div id="top">
+        <i class="fa fa-sign-in" id=loginicon></i>
+        <p>Login Here</p>
+    </div>
+
+    <div class="mainbox">
+
+
+
+        <form action="/login" method="POST">
+            <div class="box" id="InputEmail">
+                <label for="exampleInputEmail" class="form-label" id="email">Email</label>
+                <i class="fa fa-envelope" id="mailicon"></i>
+                <input type="email" class="form-box" id="InputEmail" name="username" placeholder="example@gmail.com">
+            </div>
+
+            <div class="box">
+                <label for="exampleInputPassword" class="form-label" id="password">Password</label>
+                <i class="fa fa-key" id="keyicon"></i>
+                <input type="password" class="form-box" id="InputPassword" name="password" placeholder="password">
+         
+            </div>
+            <button type="submit" class="btn btn-primary" id="login">log in</button>
+        </form>
+
+        <div class="redirectRegister">
+            <span>Don't have an account ? </span>
+
+                <a href="./register" id="registerLink" class="btn btn-primary">Register</a>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+
+</html>

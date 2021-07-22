@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Resgister</title>
+    <style>
+        ul{
+            margin-left: 50px;
+            margin-top: 10px;
+            
+        }
+        a{
+            text-decoration: none;
+        }
+        #registerbox {
+            text-align: center;
+            margin:auto;
+        }
+
+        #top {
+            display: inline-flex;
+            font-weight: bolder;
+            font-size: 40px;
+        }
+
+        .mainbox {
+            width: 560px;
+            margin: auto;
+            border: 2px solid rgb(71, 160, 172);
+            box-shadow: 2px 2px rgb(88, 88, 88);
+        }
+
+        #registericon {
+            margin: auto;
+            padding: 10px;
+        }
+
+        form {
+            text-align: center;
+
+        }
+
+        .form-box {
+            display: inline;
+            width: 400px;
+            margin: auto;
+            border: none;
+            border-bottom: 2px solid black;
+            margin-top: 50px;
+            margin-left: 15px;
+            outline: none;
+
+        }
+
+        #mailicon,
+        #keyicon,
+        #nameicon {
+            margin-left: 10px;
+            color: rgb(88, 88, 88);
+        }
+
+        #boxname {
+            margin-left: 30px;
+        }
+
+        #InputEmail {
+            margin-left: 20px;
+        }
+
+
+        #register {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .redirectLogin {
+            margin-top: 0px;
+            margin-bottom: 30px;
+        }
+
+        #login {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        #openeye {
+            display: none;
+        }
+
+        #loginLink {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <ul class="sidebar-nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/books">All books</a></li>
+    </ul>
+    <div id="registerbox">
+        <div id="top">
+            <i class="fa fa-user-plus" id="registericon"></i>
+            <p>Register Here</p>
+        </div>
+        <div class="mainbox">
+
+
+
+            <form action="/register" method="POST">
+                <div class="box" id="boxname">
+                    <label for="exampleInputName" class="form-label" id="name">Name</label>
+                    <i class="fa fa-user" id="nameicon"></i>
+                    <input type="text" class="form-box" id="InputName" name="name" placeholder="xyz">
+                </div>
+
+                <div class="box" id="InputEmail">
+                    <label for="exampleInputEmail" class="form-label" id="email">Email</label>
+                    <i class="fa fa-envelope" id="mailicon"></i>
+                    <input type="email" class="form-box" id="InputEmail" name="username"
+                        placeholder="example@gmail.com">
+                </div>
+
+                <div class="box">
+                    <label for="exampleInputPassword" class="form-label" id="password">Password</label>
+                    <i class="fa fa-key" id="keyicon"></i>
+                    <input type="password" class="form-box" id="InputPassword" name="password" placeholder="password">
+
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="register">Register</button>
+
+
+
+            </form>
+
+            <div class="redirectLogin">
+                <span>Already have an account ? </span>
+                <a href="./login" id="loginLink" class="btn btn-primary">Log in</a>
+            </div>
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
