@@ -1,43 +1,13 @@
 const mongoose = require("mongoose");
 const URI = require("../config/uri").mongoURI;
 const Book = require("../models/book");
+const User = require("../models/user");
+const BookCopy = require("../models/bookCopy");
 
-mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
     .then(() => console.log("Connection of store with MongoDB established..."))
     .catch(err => console.log(err));
 
-//making some dummy books for debugging
-// const book1 = new Book({
-//     title: "Harry Potter",
-//     genre: "Fantasy",
-//     author: "J.K.Rowling",
-//     description: "This is a fantasy based story of a magician.",
-//     rating: 5,
-//     mrp: 400,
-//     available_copies: 8
-// })
-
-// const book2 = new Book({
-//     title: "Lords of the Ring",
-//     genre: "Fantasy",
-//     author: "J.R.R.Tolkien",
-//     description: "This is an epic high fantasy story.",
-//     rating: 4,
-//     mrp: 350,
-//     available_copies: 5
-// })
-
-// const book3 = new Book({
-//     title: "Pride and Prejudice",
-//     genre: "Romance",
-//     author: "Jane Austen",
-//     description: "This is a 1813 romantic novel.",
-//     rating: 3.5,
-//     mrp: 200,
-//     available_copies: 12
-// })
-
-// const dummyBooks = [book1, book2, book3];
 
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
@@ -58,28 +28,125 @@ var getBook = (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            console.log(id, foundBook)
+            // console.log(id, foundBook)
             res.render("book_detail", { book: foundBook, title: "Book Details" });
         }
     })
 }
 
 var getLoanedBooks = (req, res) => {
-
     //TODO: access the books loaned for this user and render loaned books page
+    const user = req.user;
+
+    User.findById(user.id)
+        .populate({ path: "loaned_books", populate: { path: "book" }})
+        .then(copies => {
+            const books = copies.loaned_books;
+            res.render("loaned_books", { books: books, title: "Loaned Books" })
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 
+
 var issueBook = (req, res) => {
-    
     // TODO: Extract necessary book details from request
     // return with appropriate status
     // Optionally redirect to page or display on same
+    const { user, body } = req;    
+
+    Book.findById(body.bid, (err, foundBook) => {
+        if (err) {
+            console.log(err);
+        } else {
+            var availableCopies = foundBook.available_copies;
+            console.log(availableCopies);
+            BookCopy.find({ book: body.bid }, (err, bookCopies) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    bookCopies.forEach(bookCopy => {
+                        if (availableCopies && bookCopy.status) {
+                            User.findByIdAndUpdate(user.id, { $addToSet: { loaned_books: [bookCopy.id] } }, (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log("Successfully added book to the list of loaned books!");
+                                }
+                            });
+                            BookCopy.findByIdAndUpdate(bookCopy.id, { $set: { status: false, borrow_data: Date.now(), borrower: user.id } }, (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log("Successfully updated documents in BookCopy collection!");
+                                }
+                            });
+                            availableCopies -= 1;
+                            Book.findByIdAndUpdate(bookCopy.book, { $set: { available_copies: availableCopies } }, (err, result) => {
+                                if (err) {
+                                    console.log(err);
+                                } else {
+                                    console.log("Successfully updated documents in Book collection!");
+                                }
+                            });
+                        }
+                        return false;
+                    });
+                }
+            });
+        }
+    });
+    res.redirect(`/book/${body.bid}`);
 }
 
 var searchBooks = (req, res) => {
     // TODO: extract search details
     // query book model on these details
     // render page with the above details
+    const { title, author, genre } = req.body;
+
+    Book.find({ title: { $regex: title, $options: "i" }, author: { $regex: author, $options: "i" }, genre: { $regex: genre, $options: "i"} }, (err, foundBooks) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("book_list", { books: foundBooks, title: "Books | Library" });
+        }
+    })
+}
+
+var returnBook = (req, res) => {
+    //Return issued book
+    // console.log(req);
+    const bookCopyId = req.params.bc_id;
+    const userId = req.user.id;
+
+    const bookcopy = BookCopy.findByIdAndUpdate(bookCopyId, { $set: { status: true, borrow_data: undefined, borrower: undefined } });
+    const bookId = bookcopy.book;
+
+    BookCopy.findByIdAndUpdate(bookCopyId, { $set: { status: true, borrow_data: undefined, borrower: undefined } }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfully updated bookcopy schema!");
+        }
+    });
+    User.findByIdAndUpdate(userId, { $pull: { loaned_books: bookCopyId } }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfully removed bookcopy from user data!");
+        }
+    });
+    Book.findByIdAndUpdate(bookId, { $inc: { available_copies: 1 } }, (err, result) => {
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Successfully updated book details!");
+        }
+    });
+
+    res.redirect("/books/loaned");
 }
 
 module.exports = {
@@ -87,5 +154,6 @@ module.exports = {
     getBook,
     getLoanedBooks,
     issueBook,
-    searchBooks
+    searchBooks,
+    returnBook
 }

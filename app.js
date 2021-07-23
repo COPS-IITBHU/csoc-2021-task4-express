@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 var mongoose = require("mongoose");
-var passport = require("passport");
+const session = require("express-session");
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 var auth = require("./controllers/auth");
 var store = require("./controllers/store");
 var User = require("./models/user");
@@ -13,17 +15,16 @@ var port = process.env.PORT || 3000;
 app.use(express.static("public"));
 
 /*  CONFIGURE WITH PASSPORT */
-app.use(
-  require("express-session")({
-    secret: "decryptionkey", //This is the secret used to sign the session ID cookie.
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+app.use(session({
+  secret: "decryptionkey", //This is the secret used to sign the session ID cookie.
+  resave: false,
+  saveUninitialized: false,
+}));
 
 app.use(passport.initialize()); //middleware that initialises Passport.
 app.use(passport.session());
-passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
+passport.use(User.createStrategy());
+// passport.use(new localStrategy(User.authenticate())); //used to authenticate User model with passport
 passport.serializeUser(User.serializeUser()); //used to serialize the user for the session
 passport.deserializeUser(User.deserializeUser()); // used to deserialize the user
 
@@ -38,7 +39,7 @@ app.use(function (req, res, next) {
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
 const URI = require("./config/uri").mongoURI;
-mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false })
   .then(() => console.log("Connection of app with MongoDB established..."))
   .catch(err => console.log(err));
 
@@ -58,11 +59,13 @@ app.get("/book/:id", store.getBook);
 
 app.get("/books/loaned",
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
- store.getLoanedBooks);
+  middleware.isLoggedIn,
+  store.getLoanedBooks);
 
-app.post("/books/issue", 
+app.post("/books/issue",
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
-store.issueBook);
+  middleware.isLoggedIn,
+  store.issueBook);
 
 app.post("/books/search-book", store.searchBooks);
 
@@ -73,6 +76,8 @@ TODO: Your task is to complete below controllers in controllers/auth.js
 If you need to add any new route add it here and define its controller
 controllers folder.
 */
+
+app.post("/books/return/:bc_id", middleware.isLoggedIn, store.returnBook);
 
 app.get("/login", auth.getLogin);
 

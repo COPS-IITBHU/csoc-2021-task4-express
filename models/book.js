@@ -17,6 +17,4 @@ var bookSchema=new mongoose.Schema({
     available_copies: Number
 })
 
-const Book = mongoose.model("Book", bookSchema);
-
-module.exports = Book;
+module.exports = Book = mongoose.model("Book", bookSchema);
