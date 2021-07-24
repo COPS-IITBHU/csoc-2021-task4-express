@@ -135,33 +135,70 @@ var searchBooks = (req, res) => {
 
 
 var removeBooks = (req, res) => {
-    console.log("delete = ", req.body);
 
-    Bookcopy.findByIdAndDelete(req.body.bookcopyid)
-        .populate('book')
-        .exec()
+    const bookcopyid = req.body.bookcopyid;
+
+    Bookcopy.findById(req.body.bookcopyid)
+        .populate('borrower')
         .then((result) => {
-            const ids = result.book.id
+
+            let size = result.borrower.loaned_books.length;
+
+            let j = 0;
+            for (let i = 0; i < size; i++) 
+            {
+                if ((result.borrower.loaned_books.length) == 1) 
+                { result.borrower.loaned_books.pop(); }
+
+                else if (result.borrower.loaned_books[i] == bookcopyid)
+                 {  continue;  }
+
+                else
+                 { result.borrower.loaned_books[j] = (result.borrower.loaned_books[i])  }
+                j = j + 1;
+            }
+
+            if (result.borrower.loaned_books.length > 0)
+                result.borrower.loaned_books.length = result.borrower.loaned_books.length - 1;
 
 
-            Book.findById(ids)
+            let loaned = result.borrower.loaned_books;
+            let borrowerid = result.borrower.id;
+
+            User.findByIdAndUpdate(borrowerid, { $set: { loaned_books: loaned } })
                 .then((result) => {
-                    num_available = (result.available_copies) + 1;
-                    let updatecopy = {
-                        available_copies: num_available
-                    }
-
-                    Book.findByIdAndUpdate(ids, { $set: updatecopy })
-                        .then((result) => {
-                            res.redirect('/books/loaned')
-                        })
-                        .catch(err => console.log("erroe = ", err));
-
+                    console.log("loaned_books updated ")
                 })
-                .catch(err => console.log("erroe = ", err));
+                .catch(err => console.log("errssoe = ", err));
+
+            Bookcopy.findByIdAndDelete(req.body.bookcopyid)
+                .populate('book')
+                .exec()
+                .then((result) => {
+                    const ids = result.book.id
+
+                    Book.findById(ids)
+                        .then((result) => {
+                            num_available = (result.available_copies) + 1;
+                            let updatecopy = {
+                                available_copies: num_available
+                            }
+
+                            Book.findByIdAndUpdate(ids, { $set: updatecopy })
+                                .then((result) => {
+                                    res.redirect('/books/loaned')
+                                })
+                                .catch(err => console.log("errwwwoe = ", err));
+
+                        })
+                        .catch(err => console.log("errsssoe = ", err));
+                })
+                .catch((err) => console.log("errmmor = ", err))
         })
-        .catch((err) => console.log("error = ", err))
+        .catch((err) => console.log("body errmmor = ", err))
 }
+
+
 
 
 
