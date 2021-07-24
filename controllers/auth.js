@@ -21,7 +21,7 @@ var postLogin = (req, res) => {
     } else {
       res.redirect("/");
       passport.authenticate("local")(req, res, () => {
-        res.redirect("/");
+        console.log("authenticated");
       })
     }
   })
@@ -59,7 +59,7 @@ var postRegister = (req, res) => {
         } else {
           res.redirect("/");
           passport.authenticate("local")(req, res, () => {
-            res.redirect("/");
+            console.log("authenticated");
           });
         }
       });

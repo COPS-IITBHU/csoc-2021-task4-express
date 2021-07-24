@@ -84,8 +84,8 @@ var issueBook = (req, res) => {
                                     res.redirect(`/book/${body.bid}`);
                                 }
                             });
+                            break;
                         }
-                        break;
                     }
                 }
             });
