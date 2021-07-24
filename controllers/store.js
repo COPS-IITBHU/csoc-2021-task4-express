@@ -26,7 +26,9 @@ var getBook = (req, res) => {
 
 var getLoanedBooks = (req, res) => {
 
-    Bookcopy.find()
+    Bookcopy.find({
+        borrower: req.user.id
+    })
         .populate('book')
         .exec()
         .then((result) => {
