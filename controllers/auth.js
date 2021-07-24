@@ -1,10 +1,6 @@
-const mongoose = require("mongoose");
-const URI = require("../config/uri").mongoURI;
 const passport = require("passport");
 const User = require("../models/user")
-
-
-    
+  
 var getLogin = (req, res) => {
   //TODO: render login page
   res.render("login", { title: "Login" });

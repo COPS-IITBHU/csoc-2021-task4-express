@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-const URI = require("../config/uri").mongoURI;
 const Book = require("../models/book");
 const User = require("../models/user");
 const BookCopy = require("../models/bookCopy");
