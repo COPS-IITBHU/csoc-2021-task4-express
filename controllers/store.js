@@ -59,7 +59,7 @@ var issueBook = (req, res) => {
                 if (err) {
                     console.log(err);
                 } else {
-                    bookCopies.forEach(bookCopy => {
+                    for(var bookCopy of bookCopies){
                         if (availableCopies && bookCopy.status) {
                             User.findByIdAndUpdate(user.id, { $addToSet: { loaned_books: [bookCopy.id] } }, (err, result) => {
                                 if (err) {
@@ -81,16 +81,16 @@ var issueBook = (req, res) => {
                                     console.log(err);
                                 } else {
                                     console.log("Successfully updated documents in Book collection!");
+                                    res.redirect(`/book/${body.bid}`);
                                 }
                             });
                         }
-                        return false;
-                    });
+                        break;
+                    }
                 }
             });
         }
     });
-    res.redirect(`/book/${body.bid}`);
 }
 
 var searchBooks = (req, res) => {
