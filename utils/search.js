@@ -18,7 +18,6 @@ function longestCommonSubsequence(s1, s2) {
   module.exports = {
       matchScore : (s1,s2)=>{
         let lcs_len = longestCommonSubsequence(s1,s2);
-        console.log(`common sub of '${s1.length}' and '${s2}' is ${lcs_len}`);
         return (lcs_len/s1.length + lcs_len/s2.length)/2;
       }
   }
