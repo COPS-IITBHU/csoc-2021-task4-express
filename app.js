@@ -18,7 +18,7 @@ var port = process.env.PORT || 3000;
 
 
 
-// connnecting to mongooose   EXTERNAL
+// CONNECTING MONGOOSE WITH MONGO DB  
 const dbURI = process.env.MONGOOSE_KEY
 // mongoose.connect(dbURI , { useNewUrlParser:true, useUnifiedTopology:true })
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
@@ -53,7 +53,7 @@ passport.deserializeUser(User.deserializeUser()); // used to deserialize the use
 
 
 
-app.use(express.urlencoded({ extended: true })); //parses incoming url encoded data from forms to json objects // get the form material
+app.use(express.urlencoded({ extended: true })); //parses incoming url encoded data from forms to json objects
 // app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 
@@ -76,9 +76,9 @@ controllers folder.
 */
 
 
-app.get("/books", store.getAllBooks);    //all books done
+app.get("/books", store.getAllBooks);    
 
-app.get("/book/:id", store.getBook);    // single book done
+app.get("/book/:id", store.getBook);   
 
 app.get("/books/loaned", middleware.isLoggedIn,
   //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
@@ -88,7 +88,7 @@ app.post("/books/issue",middleware.isLoggedIn,
   //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
   store.issueBook);
 
-app.post("/books/search-book", store.searchBooks);          //done
+app.post("/books/search-book", store.searchBooks);      
 
 /* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
 
@@ -103,12 +103,12 @@ controllers folder.
 */
 
 
-app.get("/login", auth.getLogin);  //done
+app.get("/login", auth.getLogin); 
 
-app.post("/login", auth.postLogin);   //done
+app.post("/login", auth.postLogin);  
 
-app.get("/register", auth.getRegister);  //done
+app.get("/register", auth.getRegister);  
 
-app.post("/register", auth.postRegister);   //done
+app.post("/register", auth.postRegister);  
 
-app.get("/logout", auth.logout);     // check one more
+app.get("/logout", auth.logout);    

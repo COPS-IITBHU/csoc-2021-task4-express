@@ -74,17 +74,15 @@ var issueBook = (req, res) => {
                                         loaned_books.push(element.id)
                                     })
 
-                                    loaned_books.forEach(element => console.log("loaned   ", element))
-
                                     User.findByIdAndUpdate(userid, { $set: { loaned_books: loaned_books } })
-                                        .then((result) => console.log("loane_books updated"))
+                                        .then((result) => console.log("issued & loaned_books updated"))
                                         .catch((err) => console.log("error ", err))
 
 
                                 })
                                 .catch((err) => console.log(err));
                         })
-                        .catch((err) => console.log("ebbbrror = " + err));
+                        .catch((err) => console.log("error = " + err));
             }
             else {
                 num_available = 0;
@@ -98,7 +96,7 @@ var issueBook = (req, res) => {
                 .then((result) => {
                     res.redirect('/books/loaned')
                 })
-                .catch(err => console.log("erroe = ", err));
+                .catch(err => console.log("error = ", err));
 
 
         })
@@ -167,7 +165,7 @@ var removeBooks = (req, res) => {
 
             User.findByIdAndUpdate(borrowerid, { $set: { loaned_books: loaned } })
                 .then((result) => {
-                    console.log("loaned_books updated ")
+                    console.log("loaned_books updated after returning ")
                 })
                 .catch(err => console.log("errssoe = ", err));
 
@@ -188,19 +186,15 @@ var removeBooks = (req, res) => {
                                 .then((result) => {
                                     res.redirect('/books/loaned')
                                 })
-                                .catch(err => console.log("errwwwoe = ", err));
+                                .catch(err => console.log("error = ", err));
 
                         })
-                        .catch(err => console.log("errsssoe = ", err));
+                        .catch(err => console.log("error = ", err));
                 })
-                .catch((err) => console.log("errmmor = ", err))
+                .catch((err) => console.log("error = ", err))
         })
-        .catch((err) => console.log("body errmmor = ", err))
+        .catch((err) => console.log("body error = ", err))
 }
-
-
-
-
 
 
 module.exports = {
