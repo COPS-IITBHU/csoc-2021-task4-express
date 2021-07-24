@@ -4,9 +4,6 @@ const Book = require("../models/book");
 const User = require("../models/user");
 const BookCopy = require("../models/bookCopy");
 
-
-
-
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
     Book.find({}, (err, foundBooks) => {
@@ -112,39 +109,6 @@ var searchBooks = (req, res) => {
         }
     })
 }
-
-// var returnBook = (req, res, next) => {
-//   const bookCopyId = req.params.bc_id;
-//   const userId = req.user._id;
-
-//   try {
-//     BookCopy.findByIdAndUpdate(bookCopyId, {$set: {status: true, borrow_data: undefined, borrower: undefined}})
-//     .then(result => {
-//       console.log("Successfully updated bookcopy")
-//       const {book: bookId} = result;
-//       Promise.all([
-//         Book.findByIdAndUpdate(bookId, {$inc: {available_copies: 1}}
-//           .then(() => {
-//             console.log("Successfully uppdated book details")
-//           })
-//         ),
-//         User.findByIdAndUpdate(userId, {$pull: {loaned_books: bookCopyId} }
-//           .then(() => {
-//             console.log("Successfully updated user details")
-//           })
-//         )
-//       ]).then(() => {
-//         res.redirect("/books/loaned");
-//       })
-//     }).catch(err => {
-//         console.log(err)
-//         next(err)
-//     })
-//   } catch (err) {
-//     console.log(err);
-//     next(err)
-//   }
-// }
 
 var returnBook = (req, res, next) => {
   const bookCopyId = req.params.bc_id;
