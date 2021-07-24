@@ -37,37 +37,6 @@ var getLoanedBooks = (req, res) => {
 
 
 
-var removeBooks = (req, res) => {
-    console.log("delete = ", req.body);
-
-    Bookcopy.findByIdAndDelete(req.body.bookcopyid)
-        .populate('book')
-        .exec()
-        .then((result) => {
-            const ids = result.book.id
-
-
-            Book.findById(ids)
-                .then((result) => {
-                    num_available = (result.available_copies) + 1;
-                    let updatecopy = {
-                        available_copies: num_available
-                    }
-
-                    Book.findByIdAndUpdate(ids, { $set: updatecopy })
-                        .then((result) => {
-                            res.redirect('/books/loaned')
-                        })
-                        .catch(err => console.log("erroe = ", err));
-
-                })
-                .catch(err => console.log("erroe = ", err));
-        })
-        .catch((err) => console.log("error = ", err))
-}
-
-
-
 var issueBook = (req, res) => {
 
     // TODO: Extract necessary book details from request
@@ -119,19 +88,56 @@ var searchBooks = (req, res) => {
     // TODO: extract search details
     // query book model on these details
     // render page with the above details
-    if (req.body.title) {
-        Book.find({
-            title: req.body.title,
-            author: req.body.author,
-            genre: req.body.genre
+    Book.find({
+        $or: [
+            {
+                title: req.body.title,
+                author: req.body.author,
+                genre: req.body.genre
+            },
+            { title: req.body.title },
+            { author: req.body.author },
+            { genre: req.body.genre }
+        ]
+    })
+        .then((result) => {
+            res.render("book_list", { books: result, title: "Books | Librar" })
         })
-            .then((result) => {
-                res.render("book_list", { books: result, title: "Books | Librar" })
-            })
-            .catch((err) => console.log(err))
-    }
+        .catch((err) => console.log(err))
 
 }
+
+
+var removeBooks = (req, res) => {
+    console.log("delete = ", req.body);
+
+    Bookcopy.findByIdAndDelete(req.body.bookcopyid)
+        .populate('book')
+        .exec()
+        .then((result) => {
+            const ids = result.book.id
+
+
+            Book.findById(ids)
+                .then((result) => {
+                    num_available = (result.available_copies) + 1;
+                    let updatecopy = {
+                        available_copies: num_available
+                    }
+
+                    Book.findByIdAndUpdate(ids, { $set: updatecopy })
+                        .then((result) => {
+                            res.redirect('/books/loaned')
+                        })
+                        .catch(err => console.log("erroe = ", err));
+
+                })
+                .catch(err => console.log("erroe = ", err));
+        })
+        .catch((err) => console.log("error = ", err))
+}
+
+
 
 
 module.exports = {
