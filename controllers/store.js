@@ -105,20 +105,20 @@ var searchBooks = (req, res) => {
     // TODO: extract search details
     // query book model on these details
     // render page with the above details
-    let title_query = req.body.title.trim().toLowerCase(),
-        author_query = req.body.author.trim().toLowerCase(),
-        genre_query = req.body.genre.trim().toLowerCase();
+    let title_query = req.body.title.trim(),
+        author_query = req.body.author.trim(),
+        genre_query = req.body.genre.trim();
     Book.find((err, books) => {
         let search_result = books.map((book) => {
             let scores = [];
             if (title_query != '') {
-                scores.push(search.matchScore(title_query, book.title.toLowerCase()));
+                scores.push(search.matchScore(title_query.toLowerCase(), book.title.toLowerCase()));
             }
             if (genre_query != '') {
-                scores.push(search.matchScore(genre_query, book.genre.toLowerCase()));
+                scores.push(search.matchScore(genre_query.toLowerCase(), book.genre.toLowerCase()));
             }
             if (author_query != '') {
-                scores.push(search.matchScore(author_query, book.author.toLowerCase()));
+                scores.push(search.matchScore(author_query.toLowerCase(), book.author.toLowerCase()));
             }
             return {
                 book,

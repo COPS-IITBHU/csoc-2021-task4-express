@@ -11,13 +11,28 @@
 
           <form class="row" action="/books/search-book" method="POST">
             <div class="col-sm-3">
-              Title: <input type="text" name="title" id="title" />
+              Title: 
+              <% if (typeof(title_query) != 'undefined' && title_query!='') { %>
+              <input type="text" name="title" id="title" value=<%- title_query %> />
+              <% } else { %>
+              <input type="text" name="title" id="title" />
+              <% } %> 
             </div>
             <div class="col-sm-3">
-              Author: <input type="text" name="author" id="author" />
+              Author: 
+              <% if (typeof(author_query) != 'undefined' && author_query!='') { %>
+                <input type="text" name="author" id="author" value=<%- author_query %> />
+              <% } else { %>
+                <input type="text" name="author" id="author" />
+              <% } %> 
             </div>
             <div class="col-sm-3">
-              Genre: <input type="text" name="genre" id="genre" />
+              Genre: 
+              <% if (typeof(genre_query) != 'undefined' && genre_query!='') { %>
+                <input type="text" name="genre" id="genre" value=<%- genre_query %> />
+                <% } else { %>  
+                  <input type="text" name="genre" id="genre" />
+              <% } %>
             </div>
             <div class="col-sm-12 pt-2">
               <button id="search_button" class="btn btn-primary" type="submit">
