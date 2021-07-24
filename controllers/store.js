@@ -5,24 +5,24 @@ const book = require('../models/book');
 const search = require('../utils/search');
 var getAllBooks = (req, res) => {
     //TODO: access all books from the book model and render book list page
-    Book.find((err,books)=>{
-        if(err) throw err;
-        res.render("book_list", { books:books, title: "Books | Library" });
+    Book.find((err, books) => {
+        if (err) throw err;
+        res.render("book_list", { books: books, title: "Books | Library" });
     })
-    
+
 }
 
 var getBook = (req, res) => {
     //TODO: access the book with a given id and render book detail page
-    Book.findById(req.params.id,(err,book)=>{
-        if(err) throw err;
-        BookCopy.find({book: mongoose.Types.ObjectId(req.params.id),status:true},(er,bookCopies)=>{
-            if(er) throw er;
-        res.render('book_detail',{
-            book:book,num_available:bookCopies.length,
-             title: `Book Details | ${book.title}`,
-             success_message: req.query.issue=='success'?'Book Issued Successfully':undefined,
-             error_message: req.query.issue=='failure'?'Book Issue Failed':undefined
+    Book.findById(req.params.id, (err, book) => {
+        if (err) throw err;
+        BookCopy.find({ book: mongoose.Types.ObjectId(req.params.id), status: true }, (er, bookCopies) => {
+            if (er) throw er;
+            res.render('book_detail', {
+                book: book, num_available: bookCopies.length,
+                title: `Book Details | ${book.title}`,
+                success_message: req.query.issue == 'success' ? 'Book Issued Successfully' : undefined,
+                error_message: req.query.issue == 'failure' ? 'Book Issue Failed' : undefined
             });
         });
     });
@@ -31,23 +31,23 @@ var getBook = (req, res) => {
 var getLoanedBooks = async (req, res) => {
 
     //TODO: access the books loaned for this user and render loaned books page
-    BookCopy.find((err,bookCopies)=>{
-        if(err) throw err;
-        Book.find((err,books)=>{
-            res.render('loaned_books',{
+    BookCopy.find((err, bookCopies) => {
+        if (err) throw err;
+        Book.find((err, books) => {
+            res.render('loaned_books', {
                 books: bookCopies.filter(bookCopy => req.user.loaned_books.includes(bookCopy.id))
-                .map(bookCopy=>({
-                    book: books.find(book=>(book.id == bookCopy.book)),
-                    id: bookCopy.id,
-                    borrow_date: `${bookCopy.borrow_date.getDate()}/${bookCopy.borrow_date.getMonth()+1}/${bookCopy.borrow_date.getFullYear()}`,
-                })),
+                    .map(bookCopy => ({
+                        book: books.find(book => (book.id == bookCopy.book)),
+                        id: bookCopy.id,
+                        borrow_date: `${bookCopy.borrow_date.getDate()}/${bookCopy.borrow_date.getMonth() + 1}/${bookCopy.borrow_date.getFullYear()}`,
+                    })),
                 title: `Loaned Books | ${req.user.username}`,
-                success_message: req.query.ret == 'success'?"Book returned successfully": undefined,
-                error_message: req.query.ret =='failure'?"Book could not be returned": undefined,
+                success_message: req.query.ret == 'success' ? "Book returned successfully" : undefined,
+                error_message: req.query.ret == 'failure' ? "Book could not be returned" : undefined,
             })
         })
     })
- 
+
 
 }
 
@@ -56,16 +56,16 @@ var issueBook = (req, res) => {
     // return with appropriate status
     // Optionally redirect to page or display on same
     try {
-            BookCopy.find({book: req.body.bid,status:true},(err,bookCopies)=>{
-            if(bookCopies.length==0){
+        BookCopy.find({ book: req.body.bid, status: true }, (err, bookCopies) => {
+            if (bookCopies.length == 0) {
                 res.redirect(`/book/${req.body.bid}/?issue=failure`);
             } else {
                 bookCopies[0].status = false;
                 bookCopies[0].borrow_date = Date.now();
                 bookCopies[0].borrower = req.user.id;
-                bookCopies[0].save().then((_)=>{
+                bookCopies[0].save().then((_) => {
                     req.user.loaned_books.push(bookCopies[0].id);
-                    req.user.save().then((_)=>{
+                    req.user.save().then((_) => {
                         res.redirect(`/book/${req.body.bid}/?issue=success`);
                     })
                 });
@@ -78,18 +78,18 @@ var issueBook = (req, res) => {
 }
 
 var returnBook = (req, res) => {
-    try{
-        BookCopy.findById(req.body.bcid,(err,bookCopy)=>{
-            if(err) throw err;
+    try {
+        BookCopy.findById(req.body.bcid, (err, bookCopy) => {
+            if (err) throw err;
             if (bookCopy.status) {
                 res.send('Book was already Returned');
             } else {
                 bookCopy.status = true;
                 bookCopy.borrow_date = null;
-                bookCopy.borrower=null;
-                req.user.loaned_books.splice(req.user.loaned_books.indexOf(req.body.bcid),1)
-                bookCopy.save().then((_)=>{
-                    req.user.save().then((_)=>{
+                bookCopy.borrower = null;
+                req.user.loaned_books.splice(req.user.loaned_books.indexOf(req.body.bcid), 1)
+                bookCopy.save().then((_) => {
+                    req.user.save().then((_) => {
                         res.redirect('/books/loaned?ret=success');
                     })
                 });
@@ -106,37 +106,38 @@ var searchBooks = (req, res) => {
     // query book model on these details
     // render page with the above details
     let title_query = req.body.title.trim().toLowerCase(),
-    author_query = req.body.author.trim().toLowerCase(),
-    genre_query = req.body.genre.trim().toLowerCase();
-    Book.find((err,books)=>{
-        let search_result = books.map((book)=>{
+        author_query = req.body.author.trim().toLowerCase(),
+        genre_query = req.body.genre.trim().toLowerCase();
+    Book.find((err, books) => {
+        let search_result = books.map((book) => {
             let scores = [];
             if (title_query != '') {
-                scores.push(search.matchScore(title_query,book.title.toLowerCase()));
+                scores.push(search.matchScore(title_query, book.title.toLowerCase()));
             }
             if (genre_query != '') {
-                scores.push(search.matchScore(genre_query,book.genre.toLowerCase()));
+                scores.push(search.matchScore(genre_query, book.genre.toLowerCase()));
             }
             if (author_query != '') {
-                scores.push(search.matchScore(author_query,book.author.toLowerCase()));
+                scores.push(search.matchScore(author_query, book.author.toLowerCase()));
             }
             return {
                 book,
-                score: scores.reduce((sum,elem)=> sum +elem,0)
+                score: scores.reduce((sum, elem) => sum + elem, 0)
             };
 
         })
-        .filter(search=>search.score>=0.5); //can be adjusted for different 'matchness'
-        search_result.sort((a,b)=>b.score - a.score); // rank in matchness instead 
+            .filter(search => search.score >= 0.5); //can be adjusted for different 'matchness'
+        search_result.sort((a, b) => b.score - a.score); // rank in matchness instead 
         res.render(
-            "book_list", { books:search_result.map((result)=>result.book),
-             title: "Books | Library" ,
-             title_query,
-             author_query,
-             genre_query,
-            });
+            "book_list", {
+                books: search_result.map((result) => result.book),
+            title: "Books | Library",
+            title_query,
+            author_query,
+            genre_query,
+        });
     });
-    
+
 }
 
 module.exports = {

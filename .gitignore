@@ -120,3 +120,6 @@ dist
 
 # test file
 test.js
+
+# Prettier config file
+.prettierrc
