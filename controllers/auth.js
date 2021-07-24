@@ -3,9 +3,7 @@ const URI = require("../config/uri").mongoURI;
 const passport = require("passport");
 const User = require("../models/user")
 
-mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-  .then(() => console.log("Connection of store with MongoDB established..."))
-  .catch(err => console.log(err));
+
     
 var getLogin = (req, res) => {
   //TODO: render login page
