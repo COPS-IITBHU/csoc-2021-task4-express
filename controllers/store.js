@@ -1,5 +1,6 @@
 const Book = require("../models/book");
 const Bookcopy = require("../models/bookCopy");
+const User = require("../models/user");
 
 let num_available, copy_num_available;
 copy_num_available = num_available;
@@ -46,22 +47,44 @@ var issueBook = (req, res) => {
     // Optionally redirect to page or display on same
 
     const ids = req.body.bid;
+    const userid = req.user.id;
 
     const bookcopy = new Bookcopy({
         book: req.body.bid,
         borrower: req.user.id
     });
 
+
     Book.findById(ids)
         .then((result) => {
             if ((result.available_copies) > 0) {
                 num_available = (result.available_copies) - 1;
                 bookcopy.status = true,
+
                     bookcopy.save()
                         .then((result) => {
-                            console.log(" ")
+
+                            Bookcopy.find({
+                                borrower: req.user.id
+                            })
+
+                                .then((result) => {
+                                    let loaned_books = [];
+                                    result.forEach(element => {
+                                        loaned_books.push(element.id)
+                                    })
+
+                                    loaned_books.forEach(element => console.log("loaned   ", element))
+
+                                    User.findByIdAndUpdate(userid, { $set: { loaned_books: loaned_books } })
+                                        .then((result) => console.log("loane_books updated"))
+                                        .catch((err) => console.log("error ", err))
+
+
+                                })
+                                .catch((err) => console.log(err));
                         })
-                        .catch((err) => console.log("error = " + err));
+                        .catch((err) => console.log("ebbbrror = " + err));
             }
             else {
                 num_available = 0;
@@ -69,7 +92,7 @@ var issueBook = (req, res) => {
             }
 
             let updatecopy = {
-                available_copies: num_available
+                available_copies: num_available,
             }
             Book.findByIdAndUpdate(ids, { $set: updatecopy })
                 .then((result) => {
@@ -77,11 +100,12 @@ var issueBook = (req, res) => {
                 })
                 .catch(err => console.log("erroe = ", err));
 
+
         })
         .catch((err) => console.log(err))
 
-
 }
+
 
 
 
