@@ -122,7 +122,7 @@ var searchBooks = (req, res) => {
             }
             return {
                 book,
-                score: scores.reduce((sum, elem) => sum + elem, 0)
+                score: scores.length!=0?scores.reduce((sum, elem) => sum + elem, 0):1
             };
 
         })
