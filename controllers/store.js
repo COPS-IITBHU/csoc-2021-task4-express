@@ -108,76 +108,37 @@ var searchBooks = (req, res) => {
     })
 }
 
-var returnBook = (req, res, next) => {
-  const bookCopyId = req.params.bc_id;
-    const userId = req.user._id;
-    console.log(bookCopyId instanceof String)
+var returnBook = (req, res) => {
+    //Return issued book
+    const bookCopyId = req.params.bc_id;
+    const userId = req.user.id;
 
-  try {
-    BookCopy.findByIdAndUpdate(bookCopyId, {$set: {status: true, borrow_data: undefined, borrower: undefined}})
-    .then(result => {
-      console.log("Successfully updated bookcopy")
-        const { book: bookId, _id: bookCopyId } = result;
-        console.log(bookCopyId instanceof String)
+    BookCopy.findByIdAndUpdate(bookCopyId, { $set: { status: true, borrow_data: undefined, borrower: undefined } })
+        .then(bookcopy => {
+            const bookId = bookcopy.book;
+            // console.log("bookId:", bookId);
+            console.log("Successfully updated bookcopy schema!");
 
-      Promise.all([
-        Book.findByIdAndUpdate(bookId, {$inc: {available_copies: 1}})
-          .then(() => {
-            console.log("Successfully uppdated book details")
-          })
-        ,
-        User.findByIdAndUpdate(userId, {$pull: {loaned_books: bookCopyId} })
-            .then((result) => {
-              console.log(result)
-            console.log("Successfully updated user details")
-          })
-        
-      ]).then(() => {
-          console.log("redirected");
-        res.redirect("/books/loaned");
-      })
-    })
-  } catch (err) {
-    console.log(err);
-    next(err)
-  }
+            User.findByIdAndUpdate(userId, { $pull: { loaned_books: bookCopyId } }, (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Successfully removed bookcopy from user data!");
+                }
+            });
+            Book.findByIdAndUpdate(bookId, { $inc: { available_copies: 1 } }, (err, result) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Successfully updated book details!");
+                    res.redirect("/books/loaned");
+                }
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
-
-// var returnBook = (req, res) => {
-//     //Return issued book
-//     console.log(req.user);
-//     const bookCopyId = req.params.bc_id;
-//     const userId = req.user.id;
-//     console.log(userId);
-
-//     const bookcopy = BookCopy.findByIdAndUpdate(bookCopyId, { $set: { status: true, borrow_data: undefined, borrower: undefined } });
-//     const bookId = bookcopy.book;
-//     console.log(bookId);
-
-//     BookCopy.findByIdAndUpdate(bookCopyId, { $set: { status: true, borrow_data: undefined, borrower: undefined } }, (err, result) => {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log("Successfully updated bookcopy schema!");
-//         }
-//     });
-//     User.findByIdAndUpdate(userId, { $pull: { loaned_books: bookCopyId } }, (err, result) => {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log("Successfully removed bookcopy from user data!");
-//         }
-//     });
-//     Book.findByIdAndUpdate(bookId, { $inc: { available_copies: 1 } }, (err, result) => {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             console.log("Successfully updated book details!");
-//         }
-//     });
-
-//     res.redirect("/books/loaned");
-// }
 
 module.exports = {
     getAllBooks,
