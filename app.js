@@ -6,11 +6,17 @@ var auth = require("./controllers/auth");
 var store = require("./controllers/store");
 var User = require("./models/user");
 var localStrategy = require("passport-local");
+var bodyParser = require('body-parser');
+
 //importing the middleware object to use its functions
 var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
 var port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
 /*  CONFIGURE WITH PASSPORT */
 app.use(
@@ -38,6 +44,14 @@ app.use(function (req, res, next) {
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
 
+mongoose.connect('mongodb+srv://jysh:jysh@cluster1.d0x9p.mongodb.net/local_library?retryWrites=true&w=majority',{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
 });
@@ -52,13 +66,17 @@ app.get("/books", store.getAllBooks);
 
 app.get("/book/:id", store.getBook);
 
-app.get("/books/loaned",
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+app.get("/books/loaned", middleware.isLoggedIn,
+
  store.getLoanedBooks);
 
-app.post("/books/issue", 
-//TODO: call a function from middleware object to check if logged in (use the middleware object imported)
-store.issueBook);
+app.post("/books/issue", middleware.isLoggedIn, function(req,res){
+  store.issueBook
+});
+
+app.post("/books/return", middleware.isLoggedIn, function(req,res){
+  store.returnBooks
+});
 
 app.post("/books/search-book", store.searchBooks);
 
