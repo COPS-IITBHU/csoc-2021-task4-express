@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include ("./partials/header.ejs") %>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+        <%- include("./partials/sidebar.ejs") %>
+        <div>
+            <form action="/login" method="POST">
+                <div>
+                    <input type="text" class="form-control" placeholder="Enter username" name="username" />
+                </div>
+                <div>
+                    <input type="password" class="form-control" placeholder="Enter Password" name="password" />
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div>
+                    Don't have an account? <a href="/register">Register</a>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+</body>
+</html>
