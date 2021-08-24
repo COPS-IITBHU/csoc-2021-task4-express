@@ -1,10 +1,22 @@
-var mongoose=require("mongoose");
+var mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 //DEFINING THE BOOK  COPIES MODEL
-var bookCopySchema=new mongoose.Schema({
-//TODO: DEFINE the following attributes-
- book:  //embed reference to id of book of which its a copy
- status: //TRUE IF AVAILABLE TO BE ISSUED, ELSE FALSE 
- borrow_data: //date when book was borrowed
- borrower: //embed reference to id of user who has borrowed it 
-})
-module.exports=mongoose.model("Bookcopy",bookCopySchema);
+var bookCopySchema = new Schema({
+  book: {
+    type: Schema.Types.ObjectId,
+    ref: "Book",
+    required: true
+  },
+  status: {
+    type: Boolean,
+    required: true
+  }, //true if available to borrow
+  borrow_date: {
+    type: Date
+  },
+  borrower: {
+    type: Schema.Types.ObjectId,
+    ref: "User"
+  }
+});
+module.exports = mongoose.model("Bookcopy", bookCopySchema);

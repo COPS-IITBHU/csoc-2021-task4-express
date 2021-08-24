@@ -1,0 +1,20 @@
+<html>
+  <%- include ("./partials/header.ejs") %>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <%- include ("./partials/sidebar.ejs") %>
+        <div class="col-6 offset-1 mt-4">
+          <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><%=err.message%></h4>
+            <% if (process.env.NODE_ENV !== "production") { %>
+            <p><%= err.stack %></p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include("./partials/flash.ejs") %>
+  </body>
+</html>
