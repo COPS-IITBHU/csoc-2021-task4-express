@@ -8,12 +8,17 @@ var User = require("./models/user");
 var localStrategy = require("passport-local");
 //importing the middleware object to use its functions
 var middleware = require("./middleware"); //no need of writing index.js as directory always calls index.js by default
-var port = process.env.PORT || 3000;
+var port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
+
+mongoose.set('useFindAndModify', false);
 
 app.use(express.static("public"));
 
 /*  CONFIGURE WITH PASSPORT */
-app.use(
+app.use( 
   require("express-session")({
     secret: "decryptionkey", //This is the secret used to sign the session ID cookie.
     resave: false,
@@ -27,20 +32,27 @@ passport.use(new localStrategy(User.authenticate())); //used to authenticate Use
 passport.serializeUser(User.serializeUser()); //used to serialize the user for the session
 passport.deserializeUser(User.deserializeUser()); // used to deserialize the user
 
+
+
 app.use(express.urlencoded({ extended: true })); //parses incoming url encoded data from forms to json objects
 app.set("view engine", "ejs");
 
 //THIS MIDDLEWARE ALLOWS US TO ACCESS THE LOGGED IN USER AS currentUser in all views
 app.use(function (req, res, next) {
-  res.locals.currentUser = req.user;
+  res.locals.currentUser = req.user;  
   next();
 });
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
 
+mongoose.connect("mongodb+srv://admin-danish:iA9q_x2m.sGtMJS@cluster1.v2mgj.mongodb.net/libraryDB", { useNewUrlParser: true, useUnifiedTopology: true })
+
+
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
 });
+
+
 
 /*-----------------Store ROUTES
 TODO: Your task is to complete below controllers in controllers/store.js
@@ -50,17 +62,20 @@ controllers folder.
 
 app.get("/books", store.getAllBooks);
 
-app.get("/book/:id", store.getBook);
+app.get("/book/:id", store.getBook); 
 
 app.get("/books/loaned",
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
- store.getLoanedBooks);
+middleware.isLoggedIn,store.getLoanedBooks);
 
 app.post("/books/issue", 
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
-store.issueBook);
+middleware.isLoggedIn,store.issueBook
+);
 
 app.post("/books/search-book", store.searchBooks);
+
+app.post("/books/loaned/return",middleware.isLoggedIn,store.returnBook)
 
 /* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
 
@@ -70,11 +85,12 @@ If you need to add any new route add it here and define its controller
 controllers folder.
 */
 
+
 app.get("/login", auth.getLogin);
 
 app.post("/login", auth.postLogin);
 
-app.get("/register", auth.getRegister);
+app.get("/register",auth.getRegister);
 
 app.post("/register", auth.postRegister);
 
