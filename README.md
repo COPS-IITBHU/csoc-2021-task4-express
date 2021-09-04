@@ -19,7 +19,6 @@ A very basic frontend has already been created for visualizing the results. You 
 * As an example, if a book B1 has 5 copies, then there shall be 5 BookCopy instances corresponding to the book B1.
 * While borrowing a book, a logged in user can borrow any instance of the BookCopy model whose status is available. A user is allowed to borrow multiple copies of the same book. After successfully borrowing a copy, the number of copies of the book available in the library will decrease. That is, if the user borrows the book B1, then the number of instances of book B1 will become 4. The instance won't get deleted on borrowing as it represents a physical copy of the book.
 * A user can return a copy of the book, and thereby, the number of copies of the book available will increase by 1, for each book copy returned.
-* The library system would also allow the user to rate a particular book, which will be used to calculate the average rating of the book. The ratings will be given to a book, and not to the copy of a book. Also, a user can rate a book multiple times, and in that case, only the last rating given by the user to the book will persist.
 
 ## Tasks
 #### Stage 1 (50 Points)
@@ -47,7 +46,7 @@ In this stage, you will need to connect your express app with your Mongo DB and 
 
 
 #### Stage 4 (100 Points)
-In the `controllers/store.js`, fill in the controllers for login, logout and user registration. You will also need to create basic frontend view for these in `views/`. Refer to the existing ejs templates if you have any issue. Also fill in the isLoggedIn function in `middleware/index.js`.
+In the `controllers/auth.js`, fill in the controllers for login, logout and user registration. You will also need to create basic frontend view for these in `views/`. Refer to the existing ejs templates if you have any issue. Also fill in the isLoggedIn function in `middleware/index.js`.
 
 ## Deadline
 You'll have a week to complete this task. Hence, the deadline of this task is 22nd July, 2021.
