@@ -37,6 +37,9 @@ app.use(function (req, res, next) {
 });
 
 /* TODO: CONNECT MONGOOSE WITH OUR MONGO DB  */
+const mongoURI = require('./config/key').mongoURI;
+mongoose.connect(mongoURI,{useNewUrlParser:true,useUnifiedTopology:true,useCreateIndex:true});
+
 
 app.get("/", (req, res) => {
   res.render("index", { title: "Library" });
@@ -54,13 +57,17 @@ app.get("/book/:id", store.getBook);
 
 app.get("/books/loaned",
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+  middleware.isLoggedIn,
  store.getLoanedBooks);
 
 app.post("/books/issue", 
 //TODO: call a function from middleware object to check if logged in (use the middleware object imported)
+middleware.isLoggedIn,
 store.issueBook);
 
 app.post("/books/search-book", store.searchBooks);
+
+app.post("/books/return",store.returnBook);
 
 /* TODO: WRITE VIEW TO RETURN AN ISSUED BOOK YOURSELF */
 
@@ -79,6 +86,11 @@ app.get("/register", auth.getRegister);
 app.post("/register", auth.postRegister);
 
 app.get("/logout", auth.logout);
+
+app.use((req,res,next)=>{
+  res.status(404);
+  res.send(`Error 404 : ${req.url} Not Found`)
+})
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}!`);

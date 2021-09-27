@@ -117,3 +117,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 {"mode":"full","isActive":false}
+
+# test file
+test.js
+
+# Prettier config file
+.prettierrc
